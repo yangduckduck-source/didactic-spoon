@@ -18,7 +18,9 @@
 - Claude 계정 없이: https://yangduckduck-source.github.io/didactic-spoon/ (GitHub Pages, Claude 찾기 없음)
 - Claude 계정으로: claude.ai 아티팩트 링크 (Claude 찾기 가능)
 
-두 곳 모두 '직접 추가'는 각자 브라우저에만 저장된다. 테스터는 작가 페이지 아래 "내가 추가한 항목 복사"로 보내 줄 수 있다.
+'직접 추가'는 각자 브라우저에 저장되고, 동시에 구글 폼(→ 작성자의 구글 시트)으로 전달된다.
+GitHub Pages에서는 페이지 안에서 바로 제출되고, claude.ai 아티팩트에서는 내용이 채워진 폼 링크를 열어 제출한다.
+폼 ID와 각 질문의 entry 번호는 `app.html`의 `FORM`에 있다. 시트에 모인 항목은 출처를 확인한 뒤 `SEED_MENTIONS`로 옮긴다.
 
 ## 데이터
 `app.html` 안의 `SEED_AUTHORS`, `SEED_MENTIONS`. 각 언급은 `[from, to, 관계, 매체, 출처, 연도, 맥락, 확인필요]`.
