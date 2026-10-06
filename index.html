@@ -302,6 +302,12 @@ const SEED_AUTHORS = [
   ["krahmer","카테리네 크라머","Catherine Krahmer","독일","",[]],
   ["spyri","요한나 슈피리","Johanna Spyri","스위스","1827–1901",["슈피리"]],
   ["andersen","한스 크리스티안 안데르센","Hans Christian Andersen","덴마크","1805–1875",["안데르센"]],
+  ["marquez","가브리엘 가르시아 마르케스","Gabriel García Márquez","콜롬비아","1927–2014",["마르케스","가르시아 마르케스","Gabriel Garcia Marquez","Gabo"]],
+  ["faulkner","윌리엄 포크너","William Faulkner","미국","1897–1962",["포크너"]],
+  ["rulfo","후안 룰포","Juan Rulfo","멕시코","1917–1986",["룰포"]],
+  ["woolf","버지니아 울프","Virginia Woolf","영국","1882–1941",["울프"]],
+  ["vargasllosa","마리오 바르가스 요사","Mario Vargas Llosa","페루","1936–2025",["바르가스 요사","Vargas Llosa"]],
+  ["rushdie","살만 루슈디","Salman Rushdie","영국(인도 출생)","1947–",["루슈디"]],
 ];
 
 const SEED_MENTIONS = [
@@ -433,11 +439,19 @@ const SEED_MENTIONS = [
   ["kimkitae","twain","애독","인터뷰","채널예스 [젊은 작가 특집]","—","같은 전집으로 『톰 소여의 모험』을 읽었다.",1],
   ["kimkitae","stevenson","애독","인터뷰","채널예스 [젊은 작가 특집]","—","같은 전집으로 『보물섬』을 읽었다.",1],
   ["kimkitae","andersen","애독","인터뷰","채널예스 [젊은 작가 특집]","—","안데르센의 「꿋꿋한 주석 병정」을 기억하는 책으로 꼽았다.",1],
+  ["marquez","kafka","애독","인터뷰","The Paris Review, The Art of Fiction No. 69","1981","열아홉 살에 『변신』 첫 문장을 읽고 '이렇게 써도 되는 줄 몰랐다'며 소설을 쓰기 시작했다고 회고했다."],
+  ["marquez","faulkner","스승","연설","노벨문학상 수상 연설 「라틴아메리카의 고독」","1982","\"나의 스승 윌리엄 포크너\"라 부르며 그의 노벨상 연설을 이어받았다."],
+  ["marquez","hemingway","스승","에세이","「나의 헤밍웨이」 (The New York Times)","1981","파리 거리에서 헤밍웨이를 보고 '마에스트로!'라 외쳤던 일을 회고하며, 포크너가 영혼을 길렀다면 헤밍웨이는 기술을 가르쳤다고 썼다."],
+  ["marquez","rulfo","애독","에세이","「후안 룰포에 대한 짧은 회상」","1980","『페드로 파라모』를 처음부터 끝까지 외울 만큼 읽었고, 그 덕에 막혀 있던 소설의 길을 찾았다고 했다."],
+  ["marquez","sophocles","애독","인터뷰","The Paris Review, The Art of Fiction No. 69","1981","『오이디푸스 왕』을 완벽한 작품의 본보기로 꼽았다. 첫 소설 『낙엽』의 제사(題詞)는 『안티고네』에서 따왔다.",1],
+  ["marquez","woolf","애독","대담","『구아바 향기』 (플리니오 멘도사와의 대담)","1982","『댈러웨이 부인』의 한 대목이 시간을 다루는 감각을 바꿔 놓았다고 말했다.",1],
+  ["vargasllosa","marquez","경쟁","연구서","『가르시아 마르케스: 신 살해의 역사』 (박사 논문)","1971","마르케스 연구로 박사 논문을 쓸 만큼 가까웠으나, 1976년 멕시코시티에서 주먹을 날린 뒤 30년 넘게 절연했다."],
+  ["rushdie","marquez","애독","에세이","「가브리엘 가르시아 마르케스」 (『상상의 고향』)","1982","『예고된 죽음의 연대기』를 읽고 마르케스의 마술적 사실주의를 탈식민 세계의 리얼리즘으로 읽어 냈다.",1],
   ["limsola","kimkitae","애독","추천사","『두 사람의 인터내셔널』 추천사","2024","\"김기태의 소설은 내게 완전한 기쁨을 주었다.\""],
 ];
 
 /* ───────────── 상태 ───────────── */
-const LS = { ai: "authornet:ai:v2", me: "authornet:me:v2", path: "authornet:path:v2", hidden: "authornet:hidden:v1", guide: "authornet:guide:v1", who: "authornet:who:v1" };
+const LS = { ai: "authornet:ai:v2", me: "authornet:me:v2", path: "authornet:path:v3", hidden: "authornet:hidden:v1", guide: "authornet:guide:v1", who: "authornet:who:v1" };
 /* ───────────── 구글 폼 연동 ─────────────
    직접 추가한 항목을 작성자의 구글 폼(→ 구글 시트)으로 보낸다.
    id: 폼의 공개 ID (…/forms/d/e/<id>/viewform)
@@ -539,7 +553,7 @@ const visible = m => !!m && !hiddenKinds.has(kindOf(m.kind));
 
 /* ───────────── 탐색 경로 ───────────── */
 let path = lsGet(LS.path, null);
-if (!Array.isArray(path) || !path.length || !path.every(id => authors.has(id))) path = ["kimyeonsu", "carver"];
+if (!Array.isArray(path) || !path.length || !path.every(id => authors.has(id))) path = ["hankang"];
 let route = null;   // 최근 경로 찾기 결과 {ids, undirected}
 const focusId = () => path[path.length - 1];
 
