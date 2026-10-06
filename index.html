@@ -147,6 +147,15 @@ form.add input, form.add select { border: 1px solid var(--line); border-radius: 
 form.add .full { grid-column: 1 / -1; }
 form.add .actions { grid-column: 1 / -1; display: flex; gap: 6px; justify-content: flex-end; }
 .foot { margin-top: 28px; font-size: 12px; color: var(--faint); }
+.guide { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 16px 18px; margin-bottom: 24px; font-size: 13.5px; }
+.guide h3 { font-family: var(--font-display); font-size: 17px; margin: 0 0 6px; text-wrap: balance; }
+.guide .tag-beta { display: inline-block; font-family: var(--font-body); font-size: 11px; font-weight: 600; letter-spacing: .06em; color: var(--ink); background: var(--ink-soft); border-radius: 4px; padding: 1px 6px; margin-left: 6px; vertical-align: 2px; }
+.guide p { margin: 0 0 10px; color: var(--muted); }
+.guide ol { margin: 0 0 12px; padding-left: 20px; display: grid; gap: 4px; }
+.guide li::marker { color: var(--ink); font-weight: 600; }
+.guide .send { border-top: 1px solid var(--line); padding-top: 10px; color: var(--muted); }
+.guide .send b { color: var(--fg); font-weight: 500; }
+.guide .actions { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
 
 @media (max-width: 860px) {
   .app { height: auto; }
@@ -171,6 +180,7 @@ form.add .actions { grid-column: 1 / -1; display: flex; gap: 6px; justify-conten
       <span class="suggest"><input id="r-to" placeholder="도착 작가" aria-label="도착 작가" autocomplete="off" spellcheck="false"></span>
       <button class="btn" type="submit">경로 찾기</button>
     </form>
+    <button class="btn ghost" type="button" id="helpBtn">베타 안내</button>
   </header>
   <div class="main">
     <section class="stage" aria-label="작가 연결망">
@@ -427,7 +437,7 @@ const SEED_MENTIONS = [
 ];
 
 /* ───────────── 상태 ───────────── */
-const LS = { ai: "authornet:ai:v2", me: "authornet:me:v2", path: "authornet:path:v2", hidden: "authornet:hidden:v1" };
+const LS = { ai: "authornet:ai:v2", me: "authornet:me:v2", path: "authornet:path:v2", hidden: "authornet:hidden:v1", guide: "authornet:guide:v1" };
 const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } };
 const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
 
@@ -826,6 +836,7 @@ function renderPage() {
   const busyHere = busy && busy.id === a.id;
 
   page.innerHTML = `
+    ${showGuide ? guideHtml() : ""}
     <nav class="crumbs" aria-label="탐색 경로">${crumbs}</nav>
     ${routeHtml()}
     <div class="page-icon" aria-hidden="true">${esc(a.ko.replace(/^([A-Z]\.\s*)+/, "").slice(0, 1))}</div>
@@ -867,6 +878,12 @@ function renderPage() {
   page.querySelector("#askBtn")?.addEventListener("click", () => askClaude(a.id, "likes"));
   page.querySelector("#fansBtn")?.addEventListener("click", () => askClaude(a.id, "fans"));
   page.querySelector("#stopBtn")?.addEventListener("click", () => busy?.ctl.abort());
+  page.querySelector("#guideClose")?.addEventListener("click", () => { showGuide = false; lsSet(LS.guide, false); renderPage(); });
+  page.querySelector("#guideTry")?.addEventListener("click", () => {
+    document.getElementById("r-from").value = "김연수";
+    document.getElementById("r-to").value = "루소";
+    document.getElementById("routeForm").requestSubmit();
+  });
   page.querySelector("#exportBtn")?.addEventListener("click", e => {
     const text = meStore.map(r => [r.fromName, r.toName, KINDS[kindOf(r.kind)].label, r.medium, r.source, r.year, r.note].map(x => x || "-").join(" | ")).join("\n");
     const box = page.querySelector("#exportBox");
@@ -893,6 +910,24 @@ function renderPage() {
     };
     f.querySelector("#f-cancel").onclick = () => { showForm = false; renderPage(); };
   }
+}
+/* 베타 테스터 안내 — 처음 한 번 보이고, 닫으면 '베타 안내' 버튼으로 다시 연다 */
+let showGuide = lsGet(LS.guide, true);
+document.getElementById("helpBtn").onclick = () => { showGuide = true; renderPage(); page.scrollTop = 0; page.scrollIntoView({ block: "start" }); };
+function guideHtml() {
+  return `<section class="guide" aria-labelledby="guideTitle">
+    <h3 id="guideTitle">작가의 서가에 오신 걸 환영합니다<span class="tag-beta">BETA</span></h3>
+    <p>작가들이 책·에세이·인터뷰·편지에서 좋아한다고 밝힌 작가를 따라 걷는 지도입니다. 한 작가의 서가를 열면, 그가 아끼던 작가들의 서가로 계속 넘어갈 수 있어요.</p>
+    <ol>
+      <li>위 검색창에 아는 작가를 쳐 보세요. 윤동주, 한강, 무라카미 하루키처럼요.</li>
+      <li>그래프의 원을 눌러 다음 작가로 넘어가 보세요. 지나온 작가는 왼쪽으로 물러나며 작아지고, 위쪽의 흐린 원은 지금 작가를 좋아한 작가입니다.</li>
+      <li>선의 색과 모양은 관계를 뜻합니다. 그래프 아래 범례를 눌러 스승·경쟁·번역 같은 관계만 골라 볼 수 있어요.</li>
+      <li>'경로 찾기'에 두 작가를 넣으면 둘이 어떤 작가들을 거쳐 이어지는지 보여 줍니다.</li>
+      <li>빠진 언급을 알고 계시면 작가 페이지의 '+ 직접 추가'로 넣어 주세요. 책 제목이나 인터뷰 매체 같은 출처를 함께 적어 주시면 큰 도움이 됩니다.</li>
+    </ol>
+    <div class="send"><b>의견 보내는 법</b> · 직접 추가한 항목은 이 브라우저에만 저장됩니다. 작가 페이지 아래 '내가 추가한 항목 복사'를 눌러 이 링크를 보내 준 사람에게 전해 주세요. 틀린 출처, 헷갈렸던 화면, 더 보고 싶은 작가도 함께 알려 주시면 고맙겠습니다.</div>
+    <div class="actions"><button class="btn primary" type="button" id="guideTry">예시 보기: 김연수에서 루소까지</button><button class="btn ghost" type="button" id="guideClose">안내 닫기</button></div>
+  </section>`;
 }
 function addForm(a) {
   return `<form class="add">
