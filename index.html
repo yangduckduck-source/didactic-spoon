@@ -1,0 +1,922 @@
+<title>작가의 서가</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;600&family=Noto+Serif+KR:wght@500;700&display=swap">
+<style>
+/* Layout: 왼쪽은 작가 연결망(초점 작가는 중앙에 크게, 지나온 작가는 왼쪽으로 밀리며 작아짐), 오른쪽은 노션식 작가 페이지 */
+:root {
+  --bg: #ffffff;
+  --fg: #37352f;
+  --muted: #787774;
+  --faint: #a5a29b;
+  --line: #ebeae6;
+  --hover: #f3f2ef;
+  --surface: #fbfaf8;
+  --ink: #2c5a87;          /* 만년필 블루블랙 — 초점·링크 */
+  --ink-soft: #e4ecf4;
+  --edge: #d6d3cc;
+  --edge-strong: #8fa6bd;
+  /* 관계의 성격 — 선 색 */
+  --k-admire: #7f98b2;
+  --k-mentor: #3d8a5a;
+  --k-rival: #c4473a;
+  --k-trans: #c08a1e;
+  --k-peer: #8a63b8;
+  --k-homage: #9a6a45;
+  --warn-bg: #fbf3db; --warn-fg: #7d6413;
+  --font-display: "Noto Serif KR", "Nanum Myeongjo", "AppleMyungjo", Georgia, serif;
+  --font-body: "IBM Plex Sans KR", -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #191918; --fg: #e6e4df; --muted: #9b9891; --faint: #6d6a64; --line: #2c2b29;
+    --hover: #252422; --surface: #1f1e1c; --ink: #8db7e0; --ink-soft: #1f3247;
+    --edge: #3a3936; --edge-strong: #5c7a98;
+    --k-admire: #7d9bbb; --k-mentor: #6cc08a; --k-rival: #ec7a6c; --k-trans: #e3b04b; --k-peer: #b393e0; --k-homage: #c89a72;
+    --warn-bg: #3d351b; --warn-fg: #e6cf86;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #191918; --fg: #e6e4df; --muted: #9b9891; --faint: #6d6a64; --line: #2c2b29;
+  --hover: #252422; --surface: #1f1e1c; --ink: #8db7e0; --ink-soft: #1f3247;
+  --edge: #3a3936; --edge-strong: #5c7a98;
+  --k-admire: #7d9bbb; --k-mentor: #6cc08a; --k-rival: #ec7a6c; --k-trans: #e3b04b; --k-peer: #b393e0; --k-homage: #c89a72;
+  --warn-bg: #3d351b; --warn-fg: #e6cf86;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 14px; line-height: 1.6; }
+* { box-sizing: border-box; }
+button, input, select { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 4px; }
+
+.app { height: 100%; display: grid; grid-template-rows: auto 1fr; grid-template-columns: minmax(0, 1fr); }
+.topbar { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 10px 16px; border-bottom: 1px solid var(--line); }
+.brand { font-family: var(--font-display); font-weight: 700; font-size: 16px; letter-spacing: -0.01em; white-space: nowrap; margin-right: 4px; }
+.brand small { font-family: var(--font-body); font-weight: 400; color: var(--muted); font-size: 12px; margin-left: 6px; }
+.bar-form { display: flex; gap: 6px; min-width: 0; flex: 1 1 260px; max-width: 460px; }
+.bar-form input { flex: 1; min-width: 0; border: 1px solid var(--line); background: var(--surface); border-radius: 6px; padding: 6px 10px; }
+.bar-form .arrow { align-self: center; color: var(--faint); }
+.btn { border: 1px solid var(--line); background: var(--bg); border-radius: 6px; padding: 5px 10px; white-space: nowrap; }
+.btn:hover { background: var(--hover); }
+.btn.primary { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn.ghost { border-color: transparent; color: var(--muted); }
+.btn:disabled { opacity: .5; cursor: default; }
+
+.main { display: grid; grid-template-columns: minmax(0, 1fr) minmax(340px, 480px); min-height: 0; }
+.stage { position: relative; min-height: 0; overflow: hidden; background:
+  radial-gradient(circle at 1px 1px, var(--line) 1px, transparent 0) 0 0 / 22px 22px; }
+.stage svg { width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
+.stage svg.dragging { cursor: grabbing; }
+.legend { position: absolute; left: 12px; right: 12px; bottom: 10px; display: flex; flex-wrap: wrap; gap: 4px 6px; font-size: 12px; color: var(--muted); pointer-events: none; }
+.legend > * { pointer-events: auto; }
+.kind-toggle { flex: none; white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: color-mix(in srgb, var(--bg) 88%, transparent); border-radius: 999px; padding: 2px 10px 2px 8px; font-size: 12px; color: var(--fg); }
+.kind-toggle[aria-pressed="false"] { opacity: .4; }
+.kind-toggle[aria-pressed="false"] svg { filter: grayscale(1); }
+.legend .note-dot { flex: none; white-space: nowrap; display: inline-flex; align-items: center; gap: 5px; padding: 2px 8px; background: color-mix(in srgb, var(--bg) 88%, transparent); border-radius: 999px; }
+.legend .note-dot i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.stage-tools { position: absolute; right: 12px; top: 12px; display: flex; gap: 6px; }
+
+.node circle { stroke-width: 1.5; transition: fill .3s; }
+.node text { font-family: var(--font-body); pointer-events: none; paint-order: stroke; stroke: var(--bg); stroke-width: 4px; stroke-linejoin: round; }
+.node { cursor: pointer; }
+.node:hover circle { stroke: var(--ink); }
+.node.hl circle { stroke: var(--ink); stroke-width: 3; }
+
+/* 노션식 페이지 */
+.page { border-left: 1px solid var(--line); overflow-y: auto; min-height: 0; padding-block: 16px 48px; padding-inline: 28px; }
+.crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+.crumbs button { border: 0; background: none; padding: 2px 6px; border-radius: 4px; color: var(--muted); }
+.crumbs button:hover { background: var(--hover); color: var(--fg); }
+.crumbs button[aria-current] { color: var(--fg); font-weight: 500; }
+.crumbs .sep { color: var(--faint); font-size: 11px; display: inline-flex; align-items: center; gap: 2px; }
+.page-icon { width: 64px; height: 64px; border-radius: 8px; display: grid; place-items: center; font-family: var(--font-display); font-size: 30px; font-weight: 700; background: var(--ink-soft); color: var(--ink); margin-bottom: 10px; }
+h1 { font-family: var(--font-display); font-size: 30px; line-height: 1.25; margin: 0; font-weight: 700; text-wrap: balance; letter-spacing: -0.01em; }
+.en { color: var(--muted); margin-top: 2px; }
+.props { display: grid; grid-template-columns: 120px minmax(0,1fr); gap: 2px 8px; margin: 18px 0 6px; font-size: 13.5px; }
+.props dt { color: var(--muted); padding: 3px 0; }
+.props dd { margin: 0; padding: 3px 0; min-width: 0; }
+hr.div { border: 0; border-top: 1px solid var(--line); margin: 18px 0; }
+h2 { font-size: 15px; font-weight: 600; margin: 0 0 8px; display: flex; align-items: center; gap: 8px; }
+h2 .count { color: var(--faint); font-weight: 400; }
+.db-tools { display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 10px; }
+.db-tools:empty { display: none; }
+.table-wrap { overflow-x: auto; border-top: 1px solid var(--line); }
+table { border-collapse: collapse; width: 100%; font-size: 13px; min-width: 560px; }
+th { text-align: left; font-weight: 400; color: var(--muted); padding: 6px 8px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+td { padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+td + td, th + th { border-left: 1px solid var(--line); }
+tr.row:hover td { background: var(--hover); }
+.name-cell button { border: 0; background: none; padding: 0; text-align: left; font-weight: 500; color: var(--fg); text-decoration: underline; text-decoration-color: var(--edge); text-underline-offset: 3px; }
+.name-cell button:hover { color: var(--ink); text-decoration-color: var(--ink); }
+.name-cell .sub { display: block; color: var(--faint); font-size: 12px; }
+.note { color: var(--muted); }
+.kind { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; font-size: 12px; }
+.medium { color: var(--muted); font-size: 12px; }
+.origin { font-size: 11px; color: var(--faint); white-space: nowrap; }
+.origin.ai, .origin.check { color: var(--warn-fg); }
+.callout { display: flex; gap: 10px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; font-size: 13px; color: var(--muted); margin: 8px 0 12px; }
+.callout b { color: var(--fg); font-weight: 500; }
+.callout .mark { font-family: var(--font-display); color: var(--ink); font-weight: 700; }
+.route { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin-top: 6px; color: var(--fg); }
+.status { font-size: 13px; color: var(--muted); display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 6px 0; }
+.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ink); animation: pulse 1s infinite alternate; }
+@keyframes pulse { to { opacity: .2; } }
+@media (prefers-reduced-motion: reduce) { .dot { animation: none; } }
+.backlinks { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { border: 1px solid var(--line); background: var(--bg); border-radius: 999px; padding: 2px 10px; font-size: 13px; display: inline-flex; align-items: center; gap: 6px; }
+.chip:hover { background: var(--hover); }
+form.add { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 10px; margin: 6px 0 12px; }
+form.add input, form.add select { border: 1px solid var(--line); border-radius: 5px; padding: 5px 8px; background: var(--bg); min-width: 0; }
+form.add .full { grid-column: 1 / -1; }
+form.add .actions { grid-column: 1 / -1; display: flex; gap: 6px; justify-content: flex-end; }
+.foot { margin-top: 28px; font-size: 12px; color: var(--faint); }
+
+@media (max-width: 860px) {
+  .app { height: auto; }
+  .main { grid-template-columns: minmax(0, 1fr); }
+  .stage { height: 62vh; min-height: 420px; border-bottom: 1px solid var(--line); }
+  .page { border-left: 0; padding-inline: 16px; overflow: visible; }
+  .props { grid-template-columns: 96px minmax(0,1fr); }
+}
+</style>
+
+<div class="app">
+  <header class="topbar">
+    <div class="brand">작가의 서가<small>누가 누구를 읽었나</small></div>
+    <form class="bar-form" id="searchForm" autocomplete="off">
+      <input id="q" list="known" placeholder="관심 있는 작가 (예: 윤동주, 보르헤스)" aria-label="작가 이름">
+      <button class="btn primary" type="submit">새 탐색</button>
+    </form>
+    <form class="bar-form" id="routeForm" autocomplete="off">
+      <input id="r-from" list="known" placeholder="출발 작가" aria-label="출발 작가">
+      <span class="arrow" aria-hidden="true">→</span>
+      <input id="r-to" list="known" placeholder="도착 작가" aria-label="도착 작가">
+      <button class="btn" type="submit">경로 찾기</button>
+    </form>
+    <datalist id="known"></datalist>
+  </header>
+  <div class="main">
+    <section class="stage" aria-label="작가 연결망">
+      <svg id="graph" role="img" aria-label="작가 연결망 그래프"></svg>
+      <div class="stage-tools">
+        <button class="btn" id="back" type="button" title="한 단계 뒤로">← 뒤로</button>
+        <button class="btn" id="recenter" type="button">초점으로</button>
+      </div>
+      <div class="legend" id="legend"></div>
+    </section>
+    <article class="page" id="page" aria-live="polite"></article>
+  </div>
+</div>
+
+<script>
+/* ───────────── 관계의 성격 ───────────── */
+const KINDS = {
+  애독: { label: "애독·찬사", color: "var(--k-admire)", dash: "", width: 1.4 },
+  스승: { label: "스승·사숙", color: "var(--k-mentor)", dash: "", width: 3 },
+  경쟁: { label: "경쟁·긴장", color: "var(--k-rival)", dash: "7 4", width: 1.8 },
+  번역: { label: "번역", color: "var(--k-trans)", dash: "1 5", width: 2.6 },
+  동료: { label: "동료·친구", color: "var(--k-peer)", dash: "10 3 2 3", width: 1.6 },
+  오마주: { label: "작품 속 오마주", color: "var(--k-homage)", dash: "4 3", width: 1.6 },
+};
+const kindOf = k => KINDS[k] ? k : "애독";
+const lineSwatch = (k, w = 26) => { const s = KINDS[kindOf(k)]; return `<svg width="${w}" height="8" aria-hidden="true"><line x1="1" y1="4" x2="${w - 1}" y2="4" stroke="${s.color}" stroke-width="${Math.min(s.width, 2.6)}" stroke-dasharray="${s.dash}" stroke-linecap="round"/></svg>`; };
+
+/* ───────────── 시드 데이터 (프로토타입용 정리 — 원문 대조 필요) ───────────── */
+const SEED_AUTHORS = [
+  // id, 한글, 영문, 국적, 생몰, 별칭
+  ["murakami","무라카미 하루키","Haruki Murakami","일본","1949–",["하루키","村上春樹","murakami"]],
+  ["carver","레이먼드 카버","Raymond Carver","미국","1938–1988",["카버"]],
+  ["fitzgerald","F. 스콧 피츠제럴드","F. Scott Fitzgerald","미국","1896–1940",["피츠제럴드","스콧 피츠제럴드"]],
+  ["dostoevsky","표도르 도스토옙스키","Fyodor Dostoevsky","러시아","1821–1881",["도스토옙스키","도스토예프스키","dostoyevsky"]],
+  ["chandler","레이먼드 챈들러","Raymond Chandler","미국","1888–1959",["챈들러"]],
+  ["vonnegut","커트 보니것","Kurt Vonnegut","미국","1922–2007",["보니것","커트 보네거트"]],
+  ["brautigan","리처드 브라우티건","Richard Brautigan","미국","1935–1984",["브라우티건"]],
+  ["capote","트루먼 커포티","Truman Capote","미국","1924–1984",["커포티","카포티"]],
+  ["chekhov","안톤 체호프","Anton Chekhov","러시아","1860–1904",["체호프"]],
+  ["hemingway","어니스트 헤밍웨이","Ernest Hemingway","미국","1899–1961",["헤밍웨이"]],
+  ["gardner","존 가드너","John Gardner","미국","1933–1982",[]],
+  ["dinesen","이자크 디네센","Isak Dinesen","덴마크","1885–1962",["카렌 블릭센","Karen Blixen"]],
+  ["twain","마크 트웨인","Mark Twain","미국","1835–1910",["트웨인"]],
+  ["turgenev","이반 투르게네프","Ivan Turgenev","러시아","1818–1883",["투르게네프"]],
+  ["tolstoy","레프 톨스토이","Leo Tolstoy","러시아","1828–1910",["톨스토이"]],
+  ["stendhal","스탕달","Stendhal","프랑스","1783–1842",[]],
+  ["stein","거트루드 스타인","Gertrude Stein","미국","1874–1946",[]],
+  ["pound","에즈라 파운드","Ezra Pound","미국","1885–1972",[]],
+  ["conrad","조지프 콘래드","Joseph Conrad","폴란드계 영국","1857–1924",["콘래드"]],
+  ["keats","존 키츠","John Keats","영국","1795–1821",["키츠"]],
+  ["pushkin","알렉산드르 푸시킨","Alexander Pushkin","러시아","1799–1837",["푸시킨","푸쉬킨"]],
+  ["cervantes","미겔 데 세르반테스","Miguel de Cervantes","스페인","1547–1616",["세르반테스"]],
+  ["hugo","빅토르 위고","Victor Hugo","프랑스","1802–1885",["위고"]],
+  ["balzac","오노레 드 발자크","Honoré de Balzac","프랑스","1799–1850",["발자크"]],
+  ["flaubert","귀스타브 플로베르","Gustave Flaubert","프랑스","1821–1880",["플로베르"]],
+  ["kafka","프란츠 카프카","Franz Kafka","체코(보헤미아)","1883–1924",["카프카"]],
+  ["kleist","하인리히 폰 클라이스트","Heinrich von Kleist","독일","1777–1811",["클라이스트"]],
+  ["grillparzer","프란츠 그릴파르처","Franz Grillparzer","오스트리아","1791–1872",["그릴파르처"]],
+  ["dickens","찰스 디킨스","Charles Dickens","영국","1812–1870",["디킨스"]],
+  ["montaigne","미셸 드 몽테뉴","Michel de Montaigne","프랑스","1533–1592",["몽테뉴"]],
+  ["shakespeare","윌리엄 셰익스피어","William Shakespeare","영국","1564–1616",["셰익스피어"]],
+  ["rousseau","장자크 루소","Jean-Jacques Rousseau","프랑스(제네바)","1712–1778",["루소"]],
+  ["borges","호르헤 루이스 보르헤스","Jorge Luis Borges","아르헨티나","1899–1986",["보르헤스"]],
+  ["stevenson","로버트 루이스 스티븐슨","Robert Louis Stevenson","스코틀랜드","1850–1894",["스티븐슨"]],
+  ["chesterton","G. K. 체스터턴","G. K. Chesterton","영국","1874–1936",["체스터턴"]],
+  ["kipling","러디어드 키플링","Rudyard Kipling","영국","1865–1936",["키플링"]],
+  ["poe","에드거 앨런 포","Edgar Allan Poe","미국","1809–1849",["에드거 포"]],
+  ["whitman","월트 휘트먼","Walt Whitman","미국","1819–1892",["휘트먼"]],
+  ["bolano","로베르토 볼라뇨","Roberto Bolaño","칠레","1953–2003",["볼라뇨","Roberto Bolano"]],
+  ["parra","니카노르 파라","Nicanor Parra","칠레","1914–2018",[]],
+  ["pkdick","필립 K. 딕","Philip K. Dick","미국","1928–1982",["필립 딕"]],
+  ["cortazar","훌리오 코르타사르","Julio Cortázar","아르헨티나","1914–1984",["코르타사르","Julio Cortazar"]],
+  ["celine","루이페르디낭 셀린","Louis-Ferdinand Céline","프랑스","1894–1961",["셀린"]],
+  ["orwell","조지 오웰","George Orwell","영국","1903–1950",["오웰"]],
+  ["sophocles","소포클레스","Sophocles","고대 그리스","BC 497?–406",[]],
+  ["lindgren","아스트리드 린드그렌","Astrid Lindgren","스웨덴","1907–2002",["린드그렌"]],
+  ["jammes","프랑시스 잠","Francis Jammes","프랑스","1868–1938",["프랑시스 쨈"]],
+  ["rilke","라이너 마리아 릴케","Rainer Maria Rilke","오스트리아(프라하)","1875–1926",["릴케","라이넬 마리아 릴케"]],
+  ["taoyuanming","도연명","Tao Yuanming","중국 동진","365–427",["陶淵明","도잠"]],
+  ["king","스티븐 킹","Stephen King","미국","1947–",[]],
+  ["pessoa","페르난두 페소아","Fernando Pessoa","포르투갈","1888–1935",["페소아"]],
+  ["sebald","W. G. 제발트","W. G. Sebald","독일","1944–2001",["제발트"]],
+  ["tedchiang","테드 창","Ted Chiang","미국","1967–",[]],
+  ["egan","그렉 이건","Greg Egan","호주","1961–",["그렉이건"]],
+  // 한국
+  ["kimyoungha","김영하","Kim Young-ha","한국","1968–",[]],
+  ["kimyeonsu","김연수","Kim Yeon-su","한국","1970–",[]],
+  ["kimjunghyuk","김중혁","Kim Jung-hyuk","한국","1971–",[]],
+  ["hankang","한강","Han Kang","한국","1970–",[]],
+  ["hanseungwon","한승원","Han Seung-won","한국","1939–",[]],
+  ["yundongju","윤동주","Yun Dong-ju","한국","1917–1945",[]],
+  ["baekseok","백석","Baek Seok","한국","1912–1996",["백기행"]],
+  ["jeongjiyong","정지용","Jeong Ji-yong","한국","1902–1950",[]],
+  ["jeongyujeong","정유정","Jeong You-jeong","한국","1966–",[]],
+  ["baesuah","배수아","Bae Suah","한국","1965–",[]],
+  ["kimchoyeop","김초엽","Kim Choyeop","한국","1993–",[]],
+  ["yisang","이상","Yi Sang","한국","1910–1937",["김해경"]],
+  ["parktaewon","박태원","Pak Taewon","한국","1909–1986",["구보"]],
+];
+
+const SEED_MENTIONS = [
+  // from, to, 관계, 매체, 출처, 연도, 맥락, 확인필요(1)
+  ["murakami","fitzgerald","번역","번역 후기","『グレート・ギャツビー』 일역 후기","2006","인생에서 가장 중요한 책 세 권 가운데 첫째로 『위대한 개츠비』를 꼽았다."],
+  ["murakami","dostoevsky","애독","번역 후기","『グレート・ギャツビー』 일역 후기 외","2006","『카라마조프 가의 형제들』을 '가장 중요한 세 권' 중 하나로 든다."],
+  ["murakami","chandler","번역","번역 후기","『ロング・グッドバイ』 일역 후기","2007","『기나긴 이별』 역시 '가장 중요한 세 권'에 들어간다."],
+  ["murakami","carver","번역","번역","레이먼드 카버 전집 일역 (中央公論社)","1990–2004","카버를 직접 만났고, 그의 작품 전부를 일본어로 옮겼다."],
+  ["murakami","vonnegut","애독","인터뷰","The Paris Review, The Art of Fiction No. 182","2004","초기 작품을 쓸 때 보니것과 브라우티건의 영향을 받았다고 말했다."],
+  ["murakami","brautigan","애독","인터뷰","The Paris Review, The Art of Fiction No. 182","2004","보니것과 함께 초기 문체의 원천으로 언급."],
+  ["murakami","capote","번역","번역","『ティファニーで朝食を』 일역","2008","젊은 시절부터 커포티의 문장을 동경했다고 밝히고 직접 번역했다."],
+
+  ["carver","chekhov","오마주","에세이·작품","「On Writing」 / 단편 「Errand」","1981 / 1987","체호프의 문장을 창작론의 근거로 인용했고, 마지막 단편에서 체호프의 죽음을 그렸다."],
+  ["carver","hemingway","애독","인터뷰","The Paris Review, The Art of Fiction No. 76","1983","초기 단편을 쓰며 헤밍웨이의 초기 단편에서 배웠다고 말했다."],
+  ["carver","gardner","스승","서문","「John Gardner: The Writer as Teacher」 (가드너 『On Becoming a Novelist』 서문)","1983","치코 주립대 시절 스승. 문장을 다루는 법을 가드너에게 배웠다고 회고."],
+  ["carver","dinesen","애독","에세이","「On Writing」","1981","\"희망도 절망도 없이 매일 조금씩 쓴다\"는 디네센의 말을 책상 위에 붙여 두었다."],
+
+  ["hemingway","twain","애독","작품","『아프리카의 푸른 언덕』","1935","\"현대 미국 문학은 모두 마크 트웨인의 『허클베리 핀』이라는 책 한 권에서 나왔다.\""],
+  ["hemingway","turgenev","경쟁","인터뷰","릴리언 로스, 「How Do You Like It Now, Gentlemen?」 (The New Yorker)","1950","권투 비유로 투르게네프와 스탕달을 '이겼다'고 말하며 넘어야 할 상대로 꼽았다."],
+  ["hemingway","stendhal","경쟁","인터뷰","릴리언 로스, The New Yorker 프로필","1950","같은 대목에서 스탕달을 언급."],
+  ["hemingway","tolstoy","경쟁","인터뷰","릴리언 로스, The New Yorker 프로필","1950","\"톨스토이 씨와 링에 오르진 않겠다\"며 최강의 상대로 꼽았다."],
+  ["hemingway","dostoevsky","애독","회고록","『파리는 날마다 축제』","1964 (사후)","파리 시절 도스토옙스키를 읽으며 나눈 대화를 회고한다."],
+  ["hemingway","stein","스승","회고록","『파리는 날마다 축제』","1964 (사후)","파리 시절의 문학적 후견인. 반복과 리듬에 대한 가르침을 회고한다."],
+  ["hemingway","pound","스승","회고록","『파리는 날마다 축제』","1964 (사후)","\"내가 아는 가장 너그러운 작가\"로 그린다. 원고를 고쳐 주던 선배."],
+  ["hemingway","fitzgerald","경쟁","회고록","『파리는 날마다 축제』","1964 (사후)","재능을 인정하면서도 술과 아내에 휘둘리는 모습을 신랄하게 그렸다."],
+
+  ["fitzgerald","conrad","애독","서문","『위대한 개츠비』 모던 라이브러리판 서문","1934","콘래드 『나르시서스호의 검둥이』 서문을 창작의 기준으로 거론한다."],
+  ["fitzgerald","keats","애독","편지","딸 스코티에게 보낸 편지","1940","키츠의 송가를 수없이 읽었다며 딸에게 권한다."],
+  ["fitzgerald","hemingway","동료","편지","편집자 맥스웰 퍼킨스에게 보낸 편지","1924","무명이던 헤밍웨이를 \"진짜배기\"라며 스크리브너스에 추천했다."],
+
+  ["dostoevsky","pushkin","애독","연설","푸시킨 기념비 제막식 연설 (모스크바)","1880","러시아 문학의 예언적 천재로 푸시킨을 기렸다."],
+  ["dostoevsky","cervantes","애독","에세이","『작가의 일기』","1876–1877","『돈키호테』를 인류가 쓴 가장 깊고 슬픈 책 가운데 하나로 평했다."],
+  ["dostoevsky","hugo","애독","서문","『노트르담 드 파리』 러시아어 번역 서문 (잡지 「브레먀」)","1862","위고의 작품 정신을 19세기 예술의 기본 이념으로 높이 평가했다."],
+  ["dostoevsky","balzac","번역","번역","『외제니 그랑데』 러시아어 번역","1844","첫 출판물이 발자크 번역이었다."],
+
+  ["kafka","flaubert","애독","편지","펠리체 바우어에게 보낸 편지","1913","그릴파르처·도스토옙스키·클라이스트·플로베르를 '진정한 혈족'이라 불렀다."],
+  ["kafka","dostoevsky","애독","편지","펠리체 바우어에게 보낸 편지","1913","같은 편지의 '혈족' 네 사람 중 하나."],
+  ["kafka","kleist","애독","편지","펠리체 바우어에게 보낸 편지","1913","같은 편지의 '혈족' 네 사람 중 하나."],
+  ["kafka","grillparzer","애독","편지","펠리체 바우어에게 보낸 편지","1913","같은 편지의 '혈족' 네 사람 중 하나."],
+  ["kafka","dickens","오마주","일기","일기","1917","『아메리카』가 디킨스, 특히 『데이비드 코퍼필드』를 본뜬 것이라고 적었다."],
+
+  ["flaubert","cervantes","애독","편지","루이즈 콜레에게 보낸 편지","1852","글을 읽기도 전에 외우던 『돈키호테』에서 자신의 모든 기원을 발견한다고 썼다."],
+  ["flaubert","montaigne","애독","편지","르루아예 드 샹트피 양에게 보낸 편지","1857","\"살기 위해 몽테뉴를 읽으라\"고 권했다."],
+  ["flaubert","shakespeare","애독","편지","루이즈 콜레에게 보낸 편지들","1850년대","셰익스피어를 거듭 최상의 작가로 꼽았다."],
+
+  ["chekhov","tolstoy","애독","편지","M. O. 멘시코프에게 보낸 편지","1900","\"톨스토이가 죽으면 내 삶에 커다란 빈자리가 생길 것\"이라고 썼다."],
+
+  ["tolstoy","rousseau","애독","인터뷰","폴 부아예와의 대담 (Le Temps)","1901","열다섯 살 무렵 루소의 초상 메달을 목에 걸고 다녔을 만큼 숭배했다고 말했다."],
+  ["tolstoy","stendhal","스승","인터뷰","폴 부아예와의 대담","1901","전쟁을 이해하는 법을 스탕달의 『파르마의 수도원』에서 배웠다고 했다."],
+  ["tolstoy","dickens","애독","인터뷰","폴 부아예와의 대담 외","1901","디킨스를 19세기 최고의 산문가로 꼽았다."],
+  ["tolstoy","turgenev","경쟁","일기·편지","페트의 영지에서 벌어진 다툼","1861","말다툼 끝에 결투를 신청할 만큼 사이가 틀어졌고, 17년 동안 절연했다."],
+  ["turgenev","tolstoy","애독","편지","임종 무렵 톨스토이에게 보낸 마지막 편지","1883","\"러시아 땅의 위대한 작가여, 문학으로 돌아오라\"고 간청했다."],
+
+  ["borges","stevenson","애독","에세이","「자서전 에세이」(An Autobiographical Essay)","1970","유년기 아버지 서재에서 읽은, 평생 다시 읽은 작가로 꼽는다."],
+  ["borges","chesterton","애독","에세이","「체스터턴에 관하여」 (『또 다른 심문』)","1952","가장 자주 돌아간 작가 중 하나로 여러 차례 상찬."],
+  ["borges","kipling","애독","서문","『브로디의 보고서』 서문","1970","후기 단편의 간결함을 키플링의 초기 단편에서 배웠다고 밝혔다."],
+  ["borges","poe","애독","강연·에세이","강연·에세이 다수","—","탐정소설이라는 장르를 발명한 작가로 거듭 언급."],
+  ["borges","whitman","번역","번역","『풀잎』 스페인어 번역","1969","청년기 제네바에서 휘트먼을 발견했고 훗날 직접 번역했다."],
+  ["borges","kafka","애독","에세이","「카프카와 그의 선구자들」 (『또 다른 심문』)","1951","작가는 자기의 선구자를 창조한다는 명제를 카프카로 증명한다."],
+  ["borges","cervantes","오마주","작품","「피에르 메나르, 『돈키호테』의 저자」","1939","『돈키호테』를 다시 쓰려는 가상 작가의 이야기."],
+
+  ["bolano","borges","애독","에세이","『괄호 치고』 (Entre paréntesis)","2004","보르헤스를 거듭 읽어야 할 작가로 상찬."],
+  ["bolano","parra","애독","에세이","『괄호 치고』","2004","가장 위대한 살아 있는 스페인어 시인으로 꼽았다."],
+  ["bolano","pkdick","애독","인터뷰","여러 인터뷰","1990년대–2000년대","좋아하는 작가 목록에 필립 K. 딕을 빼놓지 않았다."],
+  ["bolano","cortazar","애독","에세이","『괄호 치고』","2004","보르헤스와 함께 라틴아메리카 단편의 기준점으로 언급."],
+
+  ["cortazar","poe","번역","번역","에드거 앨런 포 산문 전집 스페인어 번역","1956","포의 소설 전편을 번역했다."],
+  ["cortazar","borges","애독","인터뷰","여러 인터뷰","—","첫 단편 「점거된 집」을 보르헤스가 잡지에 실어 주었고, 평생 존경했다."],
+
+  ["vonnegut","twain","애독","에세이","『팜 선데이』","1981","트웨인을 가장 가까운 문학적 조상으로 꼽았다."],
+  ["vonnegut","celine","애독","서문","셀린 3부작 영역판 서문 (『성에서 성으로』 외)","1974","셀린을 높이 평가하며 서문을 썼다."],
+  ["vonnegut","orwell","애독","에세이","『나라 없는 사람』","2005","오웰을 좋아하는 작가로 언급."],
+
+  ["tedchiang","egan","애독","인터뷰","여러 인터뷰","2000년대–","그렉 이건에게 찬사를 아끼지 않았다. 팬덤은 두 사람을 하드 SF의 양대산맥으로 부른다.",1],
+
+  /* ── 한국 작가 ── */
+  ["yundongju","baekseok","애독","필사","백석 시집 『사슴』 필사본","1937","100부 한정판이라 구할 수 없던 『사슴』을 도서관에서 빌려 통째로 베껴 쓰고 지니고 다녔다."],
+  ["yundongju","jammes","오마주","시","「별 헤는 밤」","1941","\"프랑시스 잠, 라이너 마리아 릴케 이런 시인의 이름을 불러 봅니다.\""],
+  ["yundongju","rilke","오마주","시","「별 헤는 밤」","1941","같은 연에서 잠과 함께 릴케의 이름을 부른다."],
+  ["yundongju","jeongjiyong","애독","유품","『정지용 시집』 (1935) 소장본","1930년대","『정지용 시집』을 아껴 읽었다. 정지용은 훗날 윤동주 유고시집(1948) 서문을 썼다.",1],
+  ["baekseok","jammes","오마주","시","「흰 바람벽이 있어」","1941","\"프랑시스 쨈과 도연명과 라이넬 마리아 릴케가 그러하듯이\" — 가난하고 외로운 이들의 계보에 시인들을 세운다."],
+  ["baekseok","taoyuanming","오마주","시","「흰 바람벽이 있어」","1941","같은 구절에서 도연명을 부른다."],
+  ["baekseok","rilke","오마주","시","「흰 바람벽이 있어」","1941","같은 구절에서 릴케를 부른다."],
+
+  ["yisang","parktaewon","동료","삽화","박태원 「소설가 구보씨의 일일」 연재 삽화 (조선중앙일보)","1934","친구의 연재소설에 '하융'이라는 이름으로 삽화를 그렸다."],
+  ["parktaewon","yisang","동료","회고","「이상의 비련」 등 회고 글","1939","요절한 친구 이상을 회고했다. 「구보씨」에도 이상을 닮은 인물이 나온다.",1],
+
+  ["hankang","lindgren","애독","인터뷰","노벨문학상 수상 직후 인터뷰","2024","영감의 원천을 묻자 『사자왕 형제의 모험』의 린드그렌을 들었다."],
+  ["hankang","hanseungwon","스승","인터뷰","여러 인터뷰","—","소설가 아버지의 책이 가득한 집에서 자라며 문학을 처음 만났다.",1],
+
+  ["jeongyujeong","king","스승","인터뷰","여러 인터뷰 (한국경제 생글생글 2016 등)","2016","습작기에 헌책방을 돌며 스티븐 킹의 책을 모았고, 그를 글쓰기의 스승으로 꼽는다."],
+
+  ["kimyoungha","fitzgerald","번역","번역","『위대한 개츠비』 번역 (문학동네)","2009","직접 번역하고 역자 해설을 붙였다."],
+  ["kimyoungha","sophocles","애독","에세이","『읽다』 (문학동네)","2015","고전을 다시 읽는 산문집에서 『오이디푸스 왕』을 오래 붙들고 이야기한다.",1],
+  ["kimyoungha","flaubert","애독","에세이","『읽다』 (문학동네)","2015","같은 책에서 『마담 보바리』를 다룬다.",1],
+
+  ["kimyeonsu","carver","번역","번역","『대성당』 번역 (문학동네)","2007","카버 단편집을 직접 옮겼고, 이 번역은 꾸준히 읽히며 개정판으로 다시 나왔다."],
+  ["kimyeonsu","kimjunghyuk","동료","에세이·인터뷰","여러 산문과 인터뷰","—","경북 김천에서 함께 자란 고향 친구이자 동료 소설가.",1],
+  ["kimjunghyuk","vonnegut","애독","추천·인터뷰","보니것 책 소개 문구 등","—","좋아하는 작가로 커트 보니것을 꼽아 왔다.",1],
+
+  ["baesuah","pessoa","번역","번역","『불안의 서』 번역 (봄날의책)","2014","페소아의 산문집을 직접 옮겼다.",1],
+  ["baesuah","sebald","번역","번역","제발트 『현기증. 감정들』 번역 (문학동네)","2014","작가로서 각별히 여긴 제발트를 직접 번역했다.",1],
+
+  ["kimchoyeop","tedchiang","애독","인터뷰","여러 인터뷰","2019–","테드 창에게 각별한 팬심을 밝혀 왔다.",1],
+  ["kimchoyeop","egan","애독","추천","그렉 이건 소설 추천사","—","'SF 작가들의 작가'로 그렉 이건을 추천했다.",1],
+];
+
+/* ───────────── 상태 ───────────── */
+const LS = { ai: "authornet:ai:v2", me: "authornet:me:v2", path: "authornet:path:v2", hidden: "authornet:hidden:v1" };
+const lsGet = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } };
+const lsSet = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} };
+
+const authors = new Map();     // id → author
+const alias = new Map();       // 정규화 키 → id
+const norm = s => (s || "").normalize("NFC").toLowerCase().replace(/[^\p{L}\p{N}]/gu, "");
+
+function addAuthor({ id, ko, en, nation, years, aliases = [] }) {
+  id = id || "a_" + norm(en || ko);
+  let a = authors.get(id);
+  if (!a) { a = { id, ko: ko || en, en: en || "", nation: nation || "", years: years || "", mentions: [] }; authors.set(id, a); }
+  else { a.en ||= en || ""; a.nation ||= nation || ""; a.years ||= years || ""; }
+  for (const k of [ko, en, ...aliases]) if (k && !alias.has(norm(k))) alias.set(norm(k), id);
+  return a;
+}
+function findAuthor(name) {
+  const k = norm(name);
+  if (!k) return null;
+  if (alias.has(k)) return authors.get(alias.get(k));
+  if (k.length < 2) return null;
+  const ids = new Set([...alias.entries()].filter(([key]) => key.endsWith(k) || key.startsWith(k)).map(([, id]) => id));
+  return ids.size === 1 ? authors.get([...ids][0]) : null;
+}
+function addMention(fromId, m) {
+  const a = authors.get(fromId);
+  if (!a || m.to === fromId) return false;
+  if (a.mentions.some(x => x.to === m.to)) return false;
+  a.mentions.push(m);
+  return true;
+}
+
+for (const [id, ko, en, nation, years, al] of SEED_AUTHORS) addAuthor({ id, ko, en, nation, years, aliases: al });
+for (const [from, to, kind, medium, source, year, note, check] of SEED_MENTIONS) addMention(from, { to, kind, medium, source, year, note, origin: check ? "check" : "seed" });
+
+// 저장된 AI 결과·직접 추가 재생
+const aiStore = lsGet(LS.ai, {});
+const meStore = lsGet(LS.me, []);
+function mentionFromAI(m) {
+  return { kind: kindOf(m.kind), medium: m.medium || "", source: m.source || "", year: m.year || "", note: m.note || "", origin: "ai", confidence: m.confidence || "low" };
+}
+function personFromAI(m) {
+  return findAuthor(m.name_en) || findAuthor(m.name_ko) || addAuthor({ ko: m.name_ko, en: m.name_en, nation: m.nation, years: m.years });
+}
+function ingestLikes(fromId, payload) {
+  let n = 0;
+  for (const m of payload.mentions || []) {
+    if (!m || !(m.name_ko || m.name_en)) continue;
+    const t = personFromAI(m);
+    if (addMention(fromId, { to: t.id, ...mentionFromAI(m) })) n++;
+  }
+  return n;
+}
+function ingestFans(toId, payload) {
+  let n = 0;
+  for (const m of payload.mentions || []) {
+    if (!m || !(m.name_ko || m.name_en)) continue;
+    const f = personFromAI(m);
+    if (addMention(f.id, { to: toId, ...mentionFromAI(m) })) n++;
+  }
+  return n;
+}
+for (const [id, rec] of Object.entries(aiStore)) {
+  addAuthor({ id, ko: rec.author?.name_ko, en: rec.author?.name_en, nation: rec.author?.nation, years: rec.author?.years });
+  for (const p of rec.likes || []) ingestLikes(id, p);
+  for (const p of rec.fans || []) ingestFans(id, p);
+}
+for (const r of meStore) {
+  addAuthor({ id: r.from, ko: r.fromName });
+  const t = findAuthor(r.toName) || addAuthor({ ko: r.toName });
+  addMention(r.from, { to: t.id, kind: kindOf(r.kind), medium: r.medium || "", source: r.source, year: r.year || "", note: r.note || "", origin: "me" });
+}
+
+const backlinks = id => [...authors.values()].filter(a => a.mentions.some(m => m.to === id));
+// 유명도: 이 서가 안에서 다른 작가들이 그를 언급한 횟수 + 그가 언급한 횟수의 절반
+function fame(id) { return backlinks(id).length + authors.get(id).mentions.length * 0.5; }
+let hiddenKinds = new Set(lsGet(LS.hidden, []));
+const visible = m => !!m && !hiddenKinds.has(kindOf(m.kind));
+
+/* ───────────── 탐색 경로 ───────────── */
+let path = lsGet(LS.path, null);
+if (!Array.isArray(path) || !path.length || !path.every(id => authors.has(id))) path = ["kimyeonsu", "carver"];
+let route = null;   // 최근 경로 찾기 결과 {ids, undirected}
+const focusId = () => path[path.length - 1];
+
+function setPath(p) { path = p; lsSet(LS.path, path); rebuild(); renderPage(); centerOnFocus(); }
+function go(id) {
+  const i = path.indexOf(id);
+  route = null;
+  setPath(i >= 0 ? path.slice(0, i + 1) : [...path, id]);
+}
+function startNew(id) { route = null; setPath([id]); }
+
+/* 최단 영향 경로: 먼저 '언급한 방향'만 따라가고, 없으면 방향을 무시해 다시 찾는다 */
+function shortest(fromId, toId, undirected) {
+  const prev = new Map([[fromId, null]]);
+  const q = [fromId];
+  while (q.length) {
+    const cur = q.shift();
+    if (cur === toId) break;
+    const nexts = authors.get(cur).mentions.map(m => m.to);
+    if (undirected) nexts.push(...backlinks(cur).map(a => a.id));
+    for (const n of nexts) if (!prev.has(n)) { prev.set(n, cur); q.push(n); }
+  }
+  if (!prev.has(toId)) return null;
+  const out = [];
+  for (let c = toId; c; c = prev.get(c)) out.unshift(c);
+  return out;
+}
+function linkBetween(a, b) {
+  const m = authors.get(a).mentions.find(x => x.to === b);
+  if (m) return { m, dir: 1 };
+  const r = authors.get(b).mentions.find(x => x.to === a);
+  return r ? { m: r, dir: -1 } : null;
+}
+
+/* ───────────── 그래프: 작은 물리 시뮬레이션 (외부 라이브러리 없음) ───────────── */
+const svg = document.getElementById("graph");
+const NS = "http://www.w3.org/2000/svg";
+const view = { x: 0, y: 0, k: 1 }, viewTarget = { x: 0, y: 0, k: 1 };
+const gRoot = document.createElementNS(NS, "g");
+const gLinks = document.createElementNS(NS, "g");
+const gNodes = document.createElementNS(NS, "g");
+gRoot.append(gLinks, gNodes); svg.append(gRoot);
+
+const nodes = new Map();   // id → {id, x, y, vx, vy, r, tr, op, top, role, age, el}
+let links = [];            // {s, t, age, onPath, fan, kind, el}
+let heat = 1;
+const MAX_FANS = 5;
+
+function rebuild() {
+  const L = path.length;
+  const info = new Map();  // id → {role, age}
+  path.forEach((id, i) => info.set(id, { role: i === L - 1 ? "focus" : "path", age: L - 1 - i }));
+  const newLinks = [];
+  path.forEach((pid, i) => {
+    const age = L - 1 - i;
+    const nextId = path[i + 1];
+    for (const m of authors.get(pid).mentions) {
+      if (!visible(m) && m.to !== nextId) continue;
+      const cur = info.get(m.to);
+      if (!cur) info.set(m.to, { role: "child", age });
+      else if (cur.role === "child" && age < cur.age) cur.age = age;
+      newLinks.push({ s: pid, t: m.to, age, onPath: nextId === m.to, kind: kindOf(m.kind) });
+    }
+    // 경로가 '거꾸로' 이어진 구간(경로 찾기에서 방향 무시)도 선으로 잇는다
+    if (nextId && !authors.get(pid).mentions.some(m => m.to === nextId)) {
+      const r = authors.get(nextId).mentions.find(m => m.to === pid);
+      if (r) newLinks.push({ s: nextId, t: pid, age, onPath: true, kind: kindOf(r.kind) });
+    }
+  });
+  // 초점 작가를 좋아한다고 밝힌 작가 중 이름난 몇 명을 흐리게
+  const fid = focusId();
+  backlinks(fid)
+    .filter(a => !info.has(a.id) && visible(a.mentions.find(m => m.to === fid)))
+    .sort((a, b) => fame(b.id) - fame(a.id))
+    .slice(0, MAX_FANS)
+    .forEach(a => {
+      info.set(a.id, { role: "fan", age: 0 });
+      newLinks.push({ s: a.id, t: fid, age: 0, fan: true, kind: kindOf(a.mentions.find(m => m.to === fid).kind) });
+    });
+
+  const focus = nodes.get(fid);
+  const ox = focus ? focus.x : 0, oy = focus ? focus.y : 0;
+  for (const [id, n] of nodes) if (!info.has(id)) { n.el.remove(); nodes.delete(id); }
+  for (const [id, inf] of info) {
+    let n = nodes.get(id);
+    if (!n) {
+      const parent = newLinks.find(l => l.t === id || l.s === id);
+      const pid = parent ? (parent.t === id ? parent.s : parent.t) : null;
+      const p = pid && nodes.get(pid);
+      const a = Math.random() * Math.PI * 2;
+      n = { id, x: (p ? p.x : ox) + Math.cos(a) * 40, y: (p ? p.y : oy) + Math.sin(a) * 40, vx: 0, vy: 0, r: 2, op: 0 };
+      n.el = makeNode(n);
+      nodes.set(id, n);
+    }
+    Object.assign(n, inf);
+    const { r, op } = sizeFor(inf);
+    n.tr = r; n.top = op;
+    styleNode(n);
+  }
+  gLinks.replaceChildren();
+  links = newLinks.filter(l => nodes.has(l.s) && nodes.has(l.t)).map(l => {
+    const k = KINDS[l.kind];
+    const el = document.createElementNS(NS, "line");
+    el.setAttribute("stroke", k.color);
+    el.setAttribute("stroke-linecap", "round");
+    el.setAttribute("stroke-dasharray", k.dash);
+    const w = l.fan ? k.width * 0.8 : l.onPath ? k.width + 1 : l.age === 0 ? k.width : k.width * 0.6;
+    el.setAttribute("stroke-width", w);
+    el.setAttribute("opacity", l.fan ? 0.35 : l.onPath ? 0.95 : Math.max(0.2, 0.85 - l.age * 0.22));
+    const t = document.createElementNS(NS, "title");
+    t.textContent = `${authors.get(l.s).ko} → ${authors.get(l.t).ko} · ${k.label}`;
+    el.append(t);
+    gLinks.append(el);
+    return { ...l, el };
+  });
+  for (const n of nodes.values()) n.fixed = n.role === "focus";
+  heat = 1;
+  updateDatalist();
+}
+
+function sizeFor({ role, age }) {
+  if (role === "focus") return { r: 30, op: 1 };
+  if (role === "fan") return { r: 11, op: 0.42 };
+  if (role === "path") return { r: Math.max(6, 22 * Math.pow(0.74, age)), op: Math.max(0.4, 1 - 0.14 * age) };
+  if (age === 0) return { r: 15, op: 1 };
+  return { r: Math.max(2.5, 8 * Math.pow(0.62, age - 1)), op: Math.max(0.18, 0.6 * Math.pow(0.7, age - 1)) };
+}
+
+function makeNode(n) {
+  const g = document.createElementNS(NS, "g");
+  g.setAttribute("class", "node");
+  g.setAttribute("tabindex", "0");
+  g.setAttribute("role", "button");
+  const c = document.createElementNS(NS, "circle");
+  const t = document.createElementNS(NS, "text");
+  t.setAttribute("text-anchor", "middle");
+  const title = document.createElementNS(NS, "title");
+  g.append(title, c, t);
+  g.addEventListener("click", e => { e.stopPropagation(); if (n.role !== "focus") go(n.id); });
+  g.addEventListener("keydown", e => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); if (n.role !== "focus") go(n.id); } });
+  g.addEventListener("pointerdown", e => e.stopPropagation());
+  gNodes.append(g);
+  return g;
+}
+function styleNode(n) {
+  const a = authors.get(n.id);
+  const [title, c, t] = n.el.children;
+  title.textContent = `${a.ko}${a.en ? " · " + a.en : ""}${n.role === "fan" ? " — 지금 작가를 좋아한다고 밝힘" : ""}`;
+  n.el.setAttribute("aria-label", `${a.ko}${n.role === "focus" ? " (지금 읽는 작가)" : n.role === "fan" ? " (지금 작가를 좋아한 작가)" : ""}`);
+  const has = a.mentions.length > 0;
+  c.setAttribute("stroke-dasharray", "");
+  if (n.role === "focus") { c.setAttribute("fill", "var(--ink)"); c.setAttribute("stroke", "var(--ink)"); }
+  else if (n.role === "path") { c.setAttribute("fill", "var(--faint)"); c.setAttribute("stroke", "var(--faint)"); }
+  else if (n.role === "fan") { c.setAttribute("fill", "var(--ink-soft)"); c.setAttribute("stroke", "var(--edge-strong)"); }
+  else { c.setAttribute("fill", "var(--bg)"); c.setAttribute("stroke", has ? "var(--edge-strong)" : "var(--edge)"); c.setAttribute("stroke-dasharray", has ? "" : "3 2"); }
+  const show = n.role === "focus" || n.role === "fan" || (n.role === "path" && n.age <= 5) || (n.role === "child" && n.age === 0);
+  t.textContent = show ? a.ko : "";
+  const fs = n.role === "focus" ? 15 : n.role === "path" ? Math.max(10, 13 - n.age) : n.role === "fan" ? 11.5 : 12.5;
+  t.setAttribute("font-size", fs);
+  t.setAttribute("font-weight", n.role === "focus" ? 600 : 400);
+  t.setAttribute("fill", n.role === "path" || n.role === "fan" ? "var(--muted)" : "var(--fg)");
+}
+
+function tick() {
+  const arr = [...nodes.values()];
+  const alpha = 0.06 + heat * 0.5;
+  for (let i = 0; i < arr.length; i++) for (let j = i + 1; j < arr.length; j++) {
+    const a = arr[i], b = arr[j];
+    let dx = b.x - a.x, dy = b.y - a.y, d2 = dx * dx + dy * dy || 0.01;
+    const d = Math.sqrt(d2);
+    const rep = (a.tr + b.tr + 8) * 28 / d2;
+    const min = a.tr + b.tr + (a.role !== "path" && b.role !== "path" ? 26 : 10);
+    let f = rep + (d < min ? (min - d) * 0.5 / d : 0);
+    dx *= f * alpha; dy *= f * alpha;
+    a.vx -= dx; a.vy -= dy; b.vx += dx; b.vy += dy;
+  }
+  for (const l of links) {
+    const a = nodes.get(l.s), b = nodes.get(l.t);
+    const want = l.fan ? 175 : l.onPath ? 150 : l.age === 0 ? 120 + b.tr * 2 : 30 + a.tr + b.tr * 3;
+    const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || 0.01;
+    const f = (d - want) / d * 0.06 * alpha * 4;
+    a.vx += dx * f * 0.5; a.vy += dy * f * 0.5; b.vx -= dx * f * 0.5; b.vy -= dy * f * 0.5;
+  }
+  for (const n of arr) {
+    if (n.role === "path") { n.vx += (-n.age * 170 - n.x) * 0.06; n.vy += (0 - n.y) * 0.04; }
+    if (n.role === "fan") { n.vy += (-160 - n.y) * 0.008; }   // 좋아한 작가들은 위쪽에 흐리게
+    if (n.fixed) { n.vx += (0 - n.x) * 0.2; n.vy += (0 - n.y) * 0.2; }
+    n.vx *= 0.82; n.vy *= 0.82;
+    n.x += n.vx; n.y += n.vy;
+    n.r += (n.tr - n.r) * 0.12;
+    n.op += (n.top - n.op) * 0.12;
+  }
+  heat *= 0.985;
+  view.x += (viewTarget.x - view.x) * 0.1;
+  view.y += (viewTarget.y - view.y) * 0.1;
+  view.k += (viewTarget.k - view.k) * 0.1;
+  draw();
+  requestAnimationFrame(tick);
+}
+function draw() {
+  const w = svg.clientWidth, h = svg.clientHeight;
+  gRoot.setAttribute("transform", `translate(${w / 2 + view.x},${h / 2 + view.y}) scale(${view.k})`);
+  for (const l of links) {
+    const a = nodes.get(l.s), b = nodes.get(l.t);
+    l.el.setAttribute("x1", a.x); l.el.setAttribute("y1", a.y);
+    l.el.setAttribute("x2", b.x); l.el.setAttribute("y2", b.y);
+  }
+  for (const n of nodes.values()) {
+    n.el.setAttribute("transform", `translate(${n.x},${n.y})`);
+    n.el.setAttribute("opacity", n.op.toFixed(3));
+    const [, c, t] = n.el.children;
+    c.setAttribute("r", n.r.toFixed(2));
+    t.setAttribute("y", (n.r + 15).toFixed(1));
+  }
+}
+function centerOnFocus() {
+  const w = svg.clientWidth;
+  viewTarget.k = w < 560 ? 0.68 : 1;
+  viewTarget.x = path.length > 1 ? Math.min(w * 0.12, 120) : 0;
+  viewTarget.y = -20;
+}
+
+let drag = null;
+svg.addEventListener("pointerdown", e => { drag = { x: e.clientX, y: e.clientY, vx: viewTarget.x, vy: viewTarget.y }; svg.setPointerCapture(e.pointerId); svg.classList.add("dragging"); });
+svg.addEventListener("pointermove", e => { if (!drag) return; viewTarget.x = drag.vx + e.clientX - drag.x; viewTarget.y = drag.vy + e.clientY - drag.y; view.x = viewTarget.x; view.y = viewTarget.y; });
+const endDrag = () => { drag = null; svg.classList.remove("dragging"); };
+svg.addEventListener("pointerup", endDrag); svg.addEventListener("pointercancel", endDrag);
+svg.addEventListener("wheel", e => {
+  e.preventDefault();
+  const k = Math.min(2.5, Math.max(0.25, viewTarget.k * Math.exp(-e.deltaY * 0.0015)));
+  const rect = svg.getBoundingClientRect();
+  const mx = e.clientX - rect.left - rect.width / 2, my = e.clientY - rect.top - rect.height / 2;
+  viewTarget.x = mx - (mx - viewTarget.x) * k / viewTarget.k;
+  viewTarget.y = my - (my - viewTarget.y) * k / viewTarget.k;
+  viewTarget.k = k;
+}, { passive: false });
+document.getElementById("recenter").onclick = centerOnFocus;
+document.getElementById("back").onclick = () => { if (path.length > 1) go(path[path.length - 2]); };
+
+/* 범례 = 관계 필터 */
+function renderLegend() {
+  const el = document.getElementById("legend");
+  el.innerHTML = Object.entries(KINDS).map(([k, v]) =>
+    `<button type="button" class="kind-toggle" data-kind="${k}" aria-pressed="${!hiddenKinds.has(k)}" title="${v.label} 선 켜기/끄기">${lineSwatch(k)}${v.label}</button>`).join("") +
+    `<span class="note-dot"><i style="background:var(--ink-soft);border:1px solid var(--edge-strong)"></i>흐린 원: 이 작가를 좋아한 작가</span>`;
+  el.querySelectorAll("[data-kind]").forEach(b => b.onclick = () => {
+    const k = b.dataset.kind;
+    hiddenKinds.has(k) ? hiddenKinds.delete(k) : hiddenKinds.add(k);
+    lsSet(LS.hidden, [...hiddenKinds]);
+    renderLegend(); rebuild(); renderPage();
+  });
+}
+
+/* ───────────── 노션식 작가 페이지 ───────────── */
+const page = document.getElementById("page");
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+let busy = null;      // {id, mode, ctl}
+let flash = "";
+let showForm = false;
+const ORIGIN = {
+  seed: () => `<span class="origin">문헌</span>`,
+  check: () => `<span class="origin check" title="출처는 있으나 원문 대조를 아직 못 한 항목">문헌 · 확인 필요</span>`,
+  me: () => `<span class="origin">직접 추가</span>`,
+  ai: m => `<span class="origin ai" title="Claude가 기억에 기대 찾은 항목입니다. 원문을 확인해 주세요.">Claude 추정${m.confidence ? " · " + esc({ high: "확신 높음", medium: "보통", low: "낮음" }[m.confidence] || m.confidence) : ""}</span>`,
+};
+const kindCell = k => `<span class="kind">${lineSwatch(k)}${esc(KINDS[kindOf(k)].label)}</span>`;
+
+function routeHtml() {
+  if (!route) return "";
+  const parts = route.ids.map((id, i) => {
+    let s = `<button class="chip" type="button" data-go="${esc(id)}">${esc(authors.get(id).ko)}</button>`;
+    if (i < route.ids.length - 1) {
+      const lb = linkBetween(id, route.ids[i + 1]);
+      s += `<span class="kind" title="${lb ? KINDS[kindOf(lb.m.kind)].label : ""}">${lineSwatch(lb?.m.kind, 18)}${lb && lb.dir < 0 ? "←" : "→"}</span>`;
+    }
+    return s;
+  }).join("");
+  return `<div class="callout"><span class="mark">↝</span><div><b>최단 영향 경로 · ${route.ids.length - 1}단계</b>${route.undirected ? " — 언급 방향만으로는 이어지지 않아 방향을 무시하고 찾았습니다. ←는 뒤 작가가 앞 작가를 언급한 구간입니다." : ""}<div class="route">${parts}</div></div></div>`;
+}
+
+function renderPage() {
+  const a = authors.get(focusId());
+  const back = backlinks(a.id).sort((x, y) => fame(y.id) - fame(x.id));
+  const counts = { seed: 0, check: 0, ai: 0, me: 0 };
+  a.mentions.forEach(m => counts[m.origin]++);
+  const srcBits = [counts.seed && `문헌 ${counts.seed}`, counts.check && `확인 필요 ${counts.check}`, counts.ai && `Claude 추정 ${counts.ai}`, counts.me && `직접 추가 ${counts.me}`].filter(Boolean).join(" · ") || "아직 없음";
+
+  const crumbs = path.map((id, i) => {
+    let sep = "";
+    if (i) { const lb = linkBetween(path[i - 1], id); sep = `<span class="sep" title="${lb ? KINDS[kindOf(lb.m.kind)].label : ""}">${lb ? lineSwatch(lb.m.kind, 16) : "/"}</span>`; }
+    return `${sep}<button type="button" data-go="${esc(id)}"${i === path.length - 1 ? ' aria-current="page"' : ""}>${esc(authors.get(id).ko)}</button>`;
+  }).join("");
+
+  const shown = a.mentions.filter(visible);
+  const rows = shown.map(m => {
+    const t = authors.get(m.to);
+    return `<tr class="row" data-hl="${esc(t.id)}">
+      <td class="name-cell"><button type="button" data-go="${esc(t.id)}">${esc(t.ko)}</button><span class="sub">${esc([t.en, t.nation].filter(Boolean).join(" · "))}</span></td>
+      <td>${kindCell(m.kind)}</td>
+      <td>${esc(m.source)}${m.year ? ` <span class="note">(${esc(m.year)})</span>` : ""}<br><span class="medium">${esc(m.medium)}</span> ${ORIGIN[m.origin](m)}</td>
+      <td class="note">${esc(m.note)}</td></tr>`;
+  }).join("");
+  const hiddenN = a.mentions.length - shown.length;
+
+  const empty = !a.mentions.length ? `<div class="callout"><span class="mark">¶</span><div><b>${esc(a.ko)}의 서가가 아직 비어 있습니다.</b><br>${sample ? "Claude에게 기록된 언급을 찾아 달라고 하거나, 알고 있는 언급을 직접 적어 넣을 수 있습니다." : "알고 있는 언급을 직접 적어 넣으면 연결망이 이어집니다. (Claude 찾기는 claude.ai에서 열었을 때만 동작합니다)"}</div></div>` : "";
+  const busyHere = busy && busy.id === a.id;
+
+  page.innerHTML = `
+    <nav class="crumbs" aria-label="탐색 경로">${crumbs}</nav>
+    ${routeHtml()}
+    <div class="page-icon" aria-hidden="true">${esc(a.ko.replace(/^([A-Z]\.\s*)+/, "").slice(0, 1))}</div>
+    <h1>${esc(a.ko)}</h1>
+    ${a.en ? `<div class="en">${esc(a.en)}</div>` : ""}
+    <dl class="props">
+      <dt>국적</dt><dd>${esc(a.nation) || "—"}</dd>
+      <dt>생몰</dt><dd>${esc(a.years) || "—"}</dd>
+      <dt>탐색 깊이</dt><dd>${path.length}번째 작가</dd>
+      <dt>데이터</dt><dd>${esc(srcBits)}</dd>
+    </dl>
+    <hr class="div">
+    <h2>좋아한다고 언급한 작가 <span class="count">${a.mentions.length}</span></h2>
+    ${empty}
+    <div class="db-tools">
+      ${sample ? `<button class="btn" type="button" id="askBtn" ${busy ? "disabled" : ""}>${a.mentions.length ? "Claude에게 더 찾아보기" : "Claude에게 찾아보기"}</button>` : ""}
+      <button class="btn ghost" type="button" id="addBtn">+ 직접 추가</button>
+    </div>
+    ${busyHere ? `<div class="status"><span class="dot"></span>Claude가 ${busy.mode === "fans" ? `${esc(a.ko)}를 좋아한 작가들의 기록` : `${esc(a.ko)}의 에세이·인터뷰·편지`}을 뒤지는 중입니다. 30초쯤 걸릴 수 있어요. <button class="btn ghost" type="button" id="stopBtn">중단</button></div>` : ""}
+    ${flash ? `<div class="status">${esc(flash)}</div>` : ""}
+    ${showForm ? addForm(a) : ""}
+    ${shown.length ? `<div class="table-wrap"><table>
+      <thead><tr><th>작가</th><th>관계</th><th>출처</th><th>맥락</th></tr></thead>
+      <tbody>${rows}</tbody></table></div>` : ""}
+    ${hiddenN ? `<p class="note">관계 필터로 ${hiddenN}건을 숨겼습니다. 그래프 아래 범례를 눌러 다시 켤 수 있어요.</p>` : ""}
+    <hr class="div">
+    <h2>이 작가를 좋아한다고 밝힌 작가 <span class="count">${back.length}</span></h2>
+    <div class="db-tools">${sample ? `<button class="btn" type="button" id="fansBtn" ${busy ? "disabled" : ""}>Claude에게 더 찾아보기</button>` : ""}</div>
+    <div class="backlinks">${back.length ? back.map(b => `<button class="chip" type="button" data-go="${esc(b.id)}">${lineSwatch(b.mentions.find(m => m.to === a.id).kind, 16)}${esc(b.ko)}</button>`).join("") : '<span class="note">아직 이 서가 안에는 없습니다.</span>'}</div>
+    ${back.length > MAX_FANS ? `<p class="note">그래프에는 이 서가에서 자주 등장하는 ${MAX_FANS}명만 흐리게 띄웠습니다.</p>` : ""}
+    <p class="foot">'문헌' 항목은 프로토타입용으로 정리한 것이라 원문 대조가 필요하고, '확인 필요'는 출처를 아직 직접 대조하지 못한 항목입니다. Claude 추정 항목은 기억에 기댄 결과이므로 출처를 꼭 확인하세요. 원을 누르면 그 작가의 서가로 넘어가고, 지나온 작가는 왼쪽으로 물러나며 작아집니다.</p>`;
+
+  page.querySelectorAll("[data-go]").forEach(b => b.onclick = () => go(b.dataset.go));
+  page.querySelectorAll("[data-hl]").forEach(r => {
+    r.onmouseenter = () => nodes.get(r.dataset.hl)?.el.classList.add("hl");
+    r.onmouseleave = () => nodes.get(r.dataset.hl)?.el.classList.remove("hl");
+  });
+  page.querySelector("#askBtn")?.addEventListener("click", () => askClaude(a.id, "likes"));
+  page.querySelector("#fansBtn")?.addEventListener("click", () => askClaude(a.id, "fans"));
+  page.querySelector("#stopBtn")?.addEventListener("click", () => busy?.ctl.abort());
+  page.querySelector("#addBtn").onclick = () => { showForm = !showForm; renderPage(); if (showForm) page.querySelector("#f-name")?.focus(); };
+  const f = page.querySelector("form.add");
+  if (f) {
+    f.onsubmit = e => {
+      e.preventDefault();
+      const toName = f.querySelector("#f-name").value.trim();
+      if (!toName) return;
+      const rec = { from: a.id, fromName: a.ko, toName, kind: f.querySelector("#f-kind").value, medium: f.querySelector("#f-medium").value.trim(), source: f.querySelector("#f-source").value.trim(), year: f.querySelector("#f-year").value.trim(), note: f.querySelector("#f-note").value.trim() };
+      const t = findAuthor(toName) || addAuthor({ ko: toName });
+      if (addMention(a.id, { to: t.id, kind: rec.kind, medium: rec.medium, source: rec.source, year: rec.year, note: rec.note, origin: "me" })) {
+        meStore.push(rec); lsSet(LS.me, meStore);
+        flash = `${t.ko}을(를) 추가했습니다.`;
+      } else flash = `${t.ko}은(는) 이미 목록에 있습니다.`;
+      showForm = false; rebuild(); renderPage();
+    };
+    f.querySelector("#f-cancel").onclick = () => { showForm = false; renderPage(); };
+  }
+}
+function addForm(a) {
+  return `<form class="add">
+    <input id="f-name" class="full" placeholder="${esc(a.ko)}이(가) 언급한 작가 이름" aria-label="언급된 작가 이름" required>
+    <select id="f-kind" aria-label="관계">${Object.entries(KINDS).map(([k, v]) => `<option value="${k}">${v.label}</option>`).join("")}</select>
+    <input id="f-medium" placeholder="매체 (에세이, 인터뷰…)" aria-label="매체">
+    <input id="f-source" placeholder="출처 (책 제목, 매체명)" aria-label="출처">
+    <input id="f-year" placeholder="연도" aria-label="연도">
+    <input id="f-note" class="full" placeholder="어떤 맥락이었나 (한 문장)" aria-label="맥락">
+    <div class="actions"><button class="btn ghost" type="button" id="f-cancel">취소</button><button class="btn primary" type="submit">추가</button></div>
+  </form>`;
+}
+
+/* ───────────── Claude에게 찾기 (claude.ai에서 열었을 때만) ───────────── */
+let sample = null;
+(async () => {
+  try { sample = window.claude ? await window.claude.use("sample") : null; } catch { sample = null; }
+  if (sample) renderPage();
+})();
+
+const JSON_SHAPE = `{"author":{"name_ko":"","name_en":"","nation":"","years":"1949–"},"mentions":[{"name_ko":"","name_en":"","nation":"","years":"","kind":"애독|스승|경쟁|번역|동료|오마주","medium":"","source":"","year":"","note":"","confidence":"high|medium|low"}]}`;
+const KIND_RULE = `- kind는 관계의 성격: 애독(좋아함·찬사), 스승(직접 배움·사숙), 경쟁(라이벌·긴장·반발), 번역(직접 번역), 동료(친구·동시대 교류), 오마주(작품 속에서 이름을 부르거나 다시 씀) 중 하나.`;
+
+async function askClaude(id, mode) {
+  if (!sample || busy) return;
+  const a = authors.get(id);
+  const who = `"${a.ko}"${a.en ? ` (${a.en})` : ""}`;
+  let prompt;
+  if (mode === "fans") {
+    const known = backlinks(id).map(b => b.en || b.ko).join(", ");
+    prompt = `너는 비교문학 연구자다. 작가 ${who}를 좋아한다고, 존경한다고, 혹은 영향을 받았다고 자신의 책·에세이·인터뷰·편지·강연·서문·번역 등에서 직접 밝힌 '이름난' 작가들을 찾아라.
+
+규칙
+- 실제로 기록된 언급만. 확실하지 않으면 빼거나 confidence를 "low"로. 지어내지 않는다.
+- 문학사에서 널리 알려진 작가를 우선한다. 해당하는 한국 작가가 있다면 포함한다.
+- 다음 작가는 이미 있으니 제외: ${known || "없음"}
+- 최대 6명. mentions의 각 항목은 '${a.ko}를 언급한 작가'다.
+${KIND_RULE}
+- source에는 확인 가능한 구체적 출처, note에는 맥락을 한국어 한 문장으로.
+
+JSON 하나만 출력한다:
+${JSON_SHAPE}`;
+  } else {
+    const known = a.mentions.map(m => { const t = authors.get(m.to); return t.en || t.ko; }).join(", ");
+    prompt = `너는 비교문학 연구자다. 작가 ${who}가 자신의 책·에세이·인터뷰·편지·일기·강연·서문·번역 등에서 좋아한다고, 존경한다고, 영향을 받았다고, 혹은 경쟁 의식을 드러내며 직접 언급한 다른 작가를 찾아라.
+
+규칙
+- 실제로 기록된 언급만. 확실하지 않으면 빼거나 confidence를 "low"로. 지어내지 않는다.
+- source에는 확인 가능한 구체적 출처(책·글 제목, 매체명, 인터뷰 진행자)를 적는다.
+- 다음 작가는 이미 있으니 제외: ${known || "없음"}
+- 최대 8명. 모르는 작가라면 mentions는 빈 배열로 둔다.
+${KIND_RULE}
+- note는 그 언급의 맥락을 한국어 한 문장으로.
+
+JSON 하나만 출력한다:
+${JSON_SHAPE}`;
+  }
+  busy = { id, mode, ctl: new AbortController() };
+  flash = ""; renderPage();
+  try {
+    const data = await sample.json(prompt, { signal: busy.ctl.signal, modelTier: "default" });
+    const au = data?.author || {};
+    addAuthor({ id, ko: a.ko, en: au.name_en, nation: au.nation, years: au.years });
+    const added = mode === "fans" ? ingestFans(id, data || {}) : ingestLikes(id, data || {});
+    const rec = aiStore[id] || { author: au, likes: [], fans: [] };
+    rec.author = { ...rec.author, ...au };
+    (rec[mode] ||= []).push({ mentions: data?.mentions || [] });
+    aiStore[id] = rec; lsSet(LS.ai, aiStore);
+    flash = added ? `Claude가 ${added}명을 찾았습니다. 출처를 꼭 확인하세요.` : "Claude가 확실한 새 언급을 찾지 못했습니다.";
+    rebuild();
+  } catch (e) {
+    flash = { cancelled: "중단했습니다.", not_granted: "Claude 호출이 허용되지 않았습니다. 직접 추가로 이어갈 수 있어요.", rate_limited: "요청이 몰렸습니다. 잠시 뒤 다시 눌러 주세요." }[e?.code] || `찾지 못했습니다 (${e?.code || "오류"}).`;
+  } finally {
+    busy = null; renderPage();
+  }
+}
+
+/* ───────────── 검색 · 경로 찾기 ───────────── */
+function updateDatalist() {
+  document.getElementById("known").innerHTML = [...authors.values()].map(a => `<option value="${esc(a.ko)}">${esc(a.en)}</option>`).join("");
+}
+document.getElementById("searchForm").onsubmit = e => {
+  e.preventDefault();
+  const q = document.getElementById("q").value.trim();
+  if (!q) return;
+  const a = findAuthor(q) || addAuthor({ ko: q });
+  document.getElementById("q").value = "";
+  flash = ""; showForm = false;
+  startNew(a.id);
+  if (!a.mentions.length && sample) askClaude(a.id, "likes");
+};
+document.getElementById("routeForm").onsubmit = e => {
+  e.preventDefault();
+  const fromIn = document.getElementById("r-from"), toIn = document.getElementById("r-to");
+  const A = findAuthor(fromIn.value), B = findAuthor(toIn.value);
+  showForm = false;
+  if (!A || !B) { flash = `${!A ? fromIn.value || "출발 작가" : toIn.value || "도착 작가"}을(를) 서가에서 찾지 못했습니다. 목록에 있는 이름을 골라 주세요.`; renderPage(); return; }
+  let ids = shortest(A.id, B.id, false), undirected = false;
+  if (!ids) { ids = shortest(A.id, B.id, true); undirected = true; }
+  if (!ids) { flash = `${A.ko}와 ${B.ko} 사이에 아직 이어진 길이 없습니다. Claude 찾기나 직접 추가로 서가를 넓혀 보세요.`; renderPage(); return; }
+  flash = "";
+  route = { ids, undirected };
+  setPath(ids);
+};
+
+/* ───────────── 시작 ───────────── */
+renderLegend(); rebuild(); renderPage();
+requestAnimationFrame(() => { centerOnFocus(); Object.assign(view, viewTarget); tick(); });
+</script>
