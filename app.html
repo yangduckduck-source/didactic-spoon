@@ -434,8 +434,8 @@ const LS = { ai: "authornet:ai:v2", me: "authornet:me:v2", path: "authornet:path
    id: 폼의 공개 ID (…/forms/d/e/<id>/viewform)
    entries: 각 질문의 entry 번호. 비어 있으면 연동하지 않고 브라우저에만 저장한다. */
 const FORM = {
-  id: "",
-  entries: { from: "", to: "", kind: "", medium: "", source: "", year: "", note: "", who: "" },
+  id: "1FAIpQLScXmpnRH1ajepeRULNajRCl3B_EHjTHTy5ypDjy3v2KQ4_ZJg",
+  entries: { from: "entry.52850164", to: "entry.118251359", kind: "entry.191421615", medium: "entry.1251978062", source: "entry.1712047905", year: "entry.568726429", note: "entry.2002772380", who: "entry.1816102469" },
 };
 const formReady = () => !!FORM.id && Object.values(FORM.entries).slice(0, 2).every(Boolean);
 function formParams(rec) {
