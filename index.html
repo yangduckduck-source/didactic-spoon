@@ -57,7 +57,12 @@ button { cursor: pointer; }
 .brand { font-family: var(--font-display); font-weight: 700; font-size: 16px; letter-spacing: -0.01em; white-space: nowrap; margin-right: 4px; }
 .brand small { font-family: var(--font-body); font-weight: 400; color: var(--muted); font-size: 12px; margin-left: 6px; }
 .bar-form { display: flex; gap: 6px; min-width: 0; flex: 1 1 260px; max-width: 460px; }
-.bar-form input { flex: 1; min-width: 0; border: 1px solid var(--line); background: var(--surface); border-radius: 6px; padding: 6px 10px; }
+.suggest { position: relative; flex: 1; min-width: 0; display: flex; }
+.bar-form input { flex: 1; min-width: 0; width: 100%; border: 1px solid var(--line); background: var(--surface); border-radius: 6px; padding: 6px 10px; }
+.suggest ul { position: absolute; top: calc(100% + 4px); left: 0; right: 0; z-index: 20; list-style: none; margin: 0; padding: 4px; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 6px 20px rgb(0 0 0 / .12); max-height: 280px; overflow-y: auto; }
+.suggest li { padding: 5px 8px; border-radius: 4px; cursor: pointer; display: flex; justify-content: space-between; gap: 8px; }
+.suggest li small { color: var(--faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.suggest li[aria-selected="true"], .suggest li:hover { background: var(--hover); }
 .bar-form .arrow { align-self: center; color: var(--faint); }
 .btn { border: 1px solid var(--line); background: var(--bg); border-radius: 6px; padding: 5px 10px; white-space: nowrap; }
 .btn:hover { background: var(--hover); }
@@ -148,16 +153,15 @@ form.add .actions { grid-column: 1 / -1; display: flex; gap: 6px; justify-conten
   <header class="topbar">
     <div class="brand">작가의 서가<small>누가 누구를 읽었나</small></div>
     <form class="bar-form" id="searchForm" autocomplete="off">
-      <input id="q" list="known" placeholder="관심 있는 작가 (예: 윤동주, 보르헤스)" aria-label="작가 이름">
+      <span class="suggest"><input id="q" placeholder="관심 있는 작가 (예: 윤동주, 보르헤스)" aria-label="작가 이름" autocomplete="off" spellcheck="false"></span>
       <button class="btn primary" type="submit">새 탐색</button>
     </form>
     <form class="bar-form" id="routeForm" autocomplete="off">
-      <input id="r-from" list="known" placeholder="출발 작가" aria-label="출발 작가">
+      <span class="suggest"><input id="r-from" placeholder="출발 작가" aria-label="출발 작가" autocomplete="off" spellcheck="false"></span>
       <span class="arrow" aria-hidden="true">→</span>
-      <input id="r-to" list="known" placeholder="도착 작가" aria-label="도착 작가">
+      <span class="suggest"><input id="r-to" placeholder="도착 작가" aria-label="도착 작가" autocomplete="off" spellcheck="false"></span>
       <button class="btn" type="submit">경로 찾기</button>
     </form>
-    <datalist id="known"></datalist>
   </header>
   <div class="main">
     <section class="stage" aria-label="작가 연결망">
@@ -256,6 +260,29 @@ const SEED_AUTHORS = [
   ["kimchoyeop","김초엽","Kim Choyeop","한국","1993–",[]],
   ["yisang","이상","Yi Sang","한국","1910–1937",["김해경"]],
   ["parktaewon","박태원","Pak Taewon","한국","1909–1986",["구보"]],
+  ["hwangjeongeun","황정은","Hwang Jung-eun","한국","1976–",[]],
+  ["kimseungok","김승옥","Kim Seung-ok","한국","1941–",[]],
+  ["parkmingyu","박민규","Park Min-gyu","한국","1968–",[]],
+  ["kimkitae","김기태","Kim Ki-tae","한국","",[]],
+  ["leemankyo","이만교","Lee Man-kyo","한국","",[]],
+  ["kimhyun","김현","Kim Hyun","한국 (평론가)","1942–1990",[]],
+  ["kimchisu","김치수","Kim Chi-su","한국 (평론가)","1940–2014",[]],
+  ["seojeongin","서정인","Seo Jeong-in","한국","1936–",[]],
+  ["shinkyungsook","신경숙","Shin Kyung-sook","한국","1963–",[]],
+  ["leeeungjun","이응준","Lee Eung-jun","한국","1970–",[]],
+  ["parksangryung","박상륭","Park Sang-ryung","한국","1940–2017",[]],
+  ["leeoisoo","이외수","Lee Oi-soo","한국","1946–2022",[]],
+  ["cheonmyeonggwan","천명관","Cheon Myeong-kwan","한국","1964–",[]],
+  ["limcheolwoo","임철우","Lim Chul-woo","한국","1954–",[]],
+  ["limsola","임솔아","Lim Sol-a","한국","1987–",[]],
+  ["kimtaewoo","김태우","Kim Tae-woo","한국 (역사학자)","",[]],
+  ["saintexupery","앙투안 드 생텍쥐페리","Antoine de Saint-Exupéry","프랑스","1900–1944",["생텍쥐페리","생떽쥐베리"]],
+  ["bailey","엘리자베스 토바 베일리","Elisabeth Tova Bailey","미국","",[]],
+  ["pasternak","보리스 파스테르나크","Boris Pasternak","러시아","1890–1960",["파스테르나크"]],
+  ["borchert","볼프강 보르헤르트","Wolfgang Borchert","독일","1921–1947",["보르헤르트"]],
+  ["krahmer","카테리네 크라머","Catherine Krahmer","독일","",[]],
+  ["spyri","요한나 슈피리","Johanna Spyri","스위스","1827–1901",["슈피리"]],
+  ["andersen","한스 크리스티안 안데르센","Hans Christian Andersen","덴마크","1805–1875",["안데르센"]],
 ];
 
 const SEED_MENTIONS = [
@@ -361,6 +388,33 @@ const SEED_MENTIONS = [
 
   ["kimchoyeop","tedchiang","애독","인터뷰","여러 인터뷰","2019–","테드 창에게 각별한 팬심을 밝혀 왔다.",1],
   ["kimchoyeop","egan","애독","추천","그렉 이건 소설 추천사","—","'SF 작가들의 작가'로 그렉 이건을 추천했다.",1],
+
+  ["hankang","dostoevsky","애독","인터뷰","네이버 '지금의 나를 만든 서재' 외 여러 인터뷰","—","10대 후반부터 20대 중반까지 읽은 『카라마조프 가의 형제들』을 인생의 책으로 꼽고, 인간의 내면을 뚫고 들어가려는 의지에 충격을 받았다고 했다."],
+  ["hankang","pasternak","애독","인터뷰","네이버 '지금의 나를 만든 서재'","—","인생의 책 다섯 권 가운데 하나로 『어느 시인의 죽음』을 꼽았다."],
+  ["hankang","borchert","애독","인터뷰","네이버 '지금의 나를 만든 서재'","—","인생의 책 다섯 권 가운데 하나로 『이별 없는 세대』를 꼽았다."],
+  ["hankang","krahmer","애독","인터뷰","네이버 '지금의 나를 만든 서재'","—","판화가 케테 콜비츠의 전기 『케테 콜비츠』를 인생의 책으로 꼽았다."],
+  ["hankang","limcheolwoo","애독","인터뷰","네이버 '지금의 나를 만든 서재'","—","인생의 책 다섯 권 가운데 유일한 한국 소설로 『아버지의 땅』을 꼽았다."],
+
+  ["hwangjeongeun","sebald","애독","인터뷰","한국일보문학상 수상 인터뷰 / 웹진 문장 공개인터뷰 「나는 왜」","2010","메모지를 붙여 가며 읽는 작가로 제발트를 꼽았다."],
+  ["hwangjeongeun","saintexupery","애독","인터뷰","웹진 문장 공개인터뷰 「나는 왜」","—","소중히 읽은 책으로 『인간의 대지』를 들었다.",1],
+  ["hwangjeongeun","bailey","애독","인터뷰","웹진 문장 공개인터뷰 「나는 왜」","—","『달팽이 안단테』의 달팽이 서술과 화자의 시선에서 묘한 일치감을 느꼈다고 했다.",1],
+  ["hwangjeongeun","kimtaewoo","애독","인터뷰","웹진 문장 공개인터뷰 「나는 왜」","—","한국전쟁 공중폭격을 다룬 『폭격』을 소중히 읽은 책으로 꼽았다.",1],
+
+  ["kimseungok","kimhyun","동료","동인지","『산문시대』","1962","서울대 문리대 동료들과 동인지 『산문시대』를 펴내 「건」「환상수첩」을 발표했다."],
+  ["kimseungok","kimchisu","동료","동인지","『산문시대』","1962","『산문시대』 동인."],
+  ["kimseungok","seojeongin","동료","동인지","『산문시대』","1962","『산문시대』 동인."],
+  ["shinkyungsook","kimseungok","애독","회고","언론 인터뷰 인용","—","\"김승옥의 「무진기행」은 스무 살에 만난 빛이었다.\"",1],
+  ["leeeungjun","kimseungok","애독","회고","언론 인터뷰 인용","—","\"김승옥은 내게 빛과 그림자였다. 닮고 싶었을 때는 찬란한 빛, 빠져나왔을 때는 잔혹한 어둠.\"",1],
+
+  ["parkmingyu","parksangryung","애독","인터뷰","중대신문 인터뷰 · 등단 소감","2003","박상륭과 이외수를 '하나의 아이콘'으로 여긴다며 존경을 표했다.",1],
+  ["parkmingyu","leeoisoo","애독","인터뷰","중대신문 인터뷰 · 등단 소감","2003","박상륭과 함께 존경하는 선배로 꼽았다.",1],
+  ["parkmingyu","cheonmyeonggwan","동료","인터뷰","인터뷰","—","천명관의 첫 단편 「프랭크와 나」를 좋아한다며 '천명관 설(說)의 유전자가 고스란히 담겨 있다'고 했다.",1],
+
+  ["kimkitae","spyri","애독","인터뷰","채널예스 [젊은 작가 특집]","—","어린 시절 계몽사 소년소녀 세계문학전집으로 『하이디』를 읽었다.",1],
+  ["kimkitae","twain","애독","인터뷰","채널예스 [젊은 작가 특집]","—","같은 전집으로 『톰 소여의 모험』을 읽었다.",1],
+  ["kimkitae","stevenson","애독","인터뷰","채널예스 [젊은 작가 특집]","—","같은 전집으로 『보물섬』을 읽었다.",1],
+  ["kimkitae","andersen","애독","인터뷰","채널예스 [젊은 작가 특집]","—","안데르센의 「꿋꿋한 주석 병정」을 기억하는 책으로 꼽았다.",1],
+  ["limsola","kimkitae","애독","추천사","『두 사람의 인터내셔널』 추천사","2024","\"김기태의 소설은 내게 완전한 기쁨을 주었다.\""],
 ];
 
 /* ───────────── 상태 ───────────── */
@@ -492,6 +546,8 @@ gRoot.append(gLinks, gNodes); svg.append(gRoot);
 const nodes = new Map();   // id → {id, x, y, vx, vy, r, tr, op, top, role, age, el}
 let links = [];            // {s, t, age, onPath, fan, kind, el}
 let heat = 1;
+let running = false;
+function wake() { heat = Math.max(heat, 0.3); if (!running) { running = true; requestAnimationFrame(tick); } }
 const MAX_FANS = 5;
 
 function rebuild() {
@@ -563,7 +619,7 @@ function rebuild() {
   });
   for (const n of nodes.values()) n.fixed = n.role === "focus";
   heat = 1;
-  updateDatalist();
+  wake();
 }
 
 function sizeFor({ role, age }) {
@@ -633,7 +689,8 @@ function tick() {
     if (n.role === "path") { n.vx += (-n.age * 170 - n.x) * 0.06; n.vy += (0 - n.y) * 0.04; }
     if (n.role === "fan") { n.vy += (-160 - n.y) * 0.008; }   // 좋아한 작가들은 위쪽에 흐리게
     if (n.fixed) { n.vx += (0 - n.x) * 0.2; n.vy += (0 - n.y) * 0.2; }
-    n.vx *= 0.82; n.vy *= 0.82;
+    const damp = 0.82 * Math.min(1, 0.6 + heat * 2);
+    n.vx *= damp; n.vy *= damp;
     n.x += n.vx; n.y += n.vy;
     n.r += (n.tr - n.r) * 0.12;
     n.op += (n.top - n.op) * 0.12;
@@ -643,6 +700,10 @@ function tick() {
   view.y += (viewTarget.y - view.y) * 0.1;
   view.k += (viewTarget.k - view.k) * 0.1;
   draw();
+  // 움직임이 거의 없으면 멈춘다 — 매 프레임 DOM을 고치느라 입력이 밀리지 않도록
+  let motion = Math.abs(viewTarget.x - view.x) + Math.abs(viewTarget.y - view.y) + Math.abs(viewTarget.k - view.k) * 100;
+  for (const n of arr) motion = Math.max(motion, Math.abs(n.tr - n.r), Math.abs(n.top - n.op) * 10);
+  if (heat < 0.02 && motion < 0.05) { running = false; return; }
   requestAnimationFrame(tick);
 }
 function draw() {
@@ -662,6 +723,7 @@ function draw() {
   }
 }
 function centerOnFocus() {
+  wake();
   const w = svg.clientWidth;
   viewTarget.k = w < 560 ? 0.68 : 1;
   viewTarget.x = path.length > 1 ? Math.min(w * 0.12, 120) : 0;
@@ -670,7 +732,7 @@ function centerOnFocus() {
 
 let drag = null;
 svg.addEventListener("pointerdown", e => { drag = { x: e.clientX, y: e.clientY, vx: viewTarget.x, vy: viewTarget.y }; svg.setPointerCapture(e.pointerId); svg.classList.add("dragging"); });
-svg.addEventListener("pointermove", e => { if (!drag) return; viewTarget.x = drag.vx + e.clientX - drag.x; viewTarget.y = drag.vy + e.clientY - drag.y; view.x = viewTarget.x; view.y = viewTarget.y; });
+svg.addEventListener("pointermove", e => { if (!drag) return; viewTarget.x = drag.vx + e.clientX - drag.x; viewTarget.y = drag.vy + e.clientY - drag.y; view.x = viewTarget.x; view.y = viewTarget.y; wake(); });
 const endDrag = () => { drag = null; svg.classList.remove("dragging"); };
 svg.addEventListener("pointerup", endDrag); svg.addEventListener("pointercancel", endDrag);
 svg.addEventListener("wheel", e => {
@@ -681,6 +743,7 @@ svg.addEventListener("wheel", e => {
   viewTarget.x = mx - (mx - viewTarget.x) * k / viewTarget.k;
   viewTarget.y = my - (my - viewTarget.y) * k / viewTarget.k;
   viewTarget.k = k;
+  wake();
 }, { passive: false });
 document.getElementById("recenter").onclick = centerOnFocus;
 document.getElementById("back").onclick = () => { if (path.length > 1) go(path[path.length - 2]); };
@@ -889,11 +952,62 @@ ${JSON_SHAPE}`;
 }
 
 /* ───────────── 검색 · 경로 찾기 ───────────── */
-function updateDatalist() {
-  document.getElementById("known").innerHTML = [...authors.values()].map(a => `<option value="${esc(a.ko)}">${esc(a.en)}</option>`).join("");
+/* 자체 자동완성 — datalist는 한글 조합 입력에서 느리고 화면을 밀어내서 쓰지 않는다 */
+function suggestions(text) {
+  const k = norm(text);
+  if (!k) return [];
+  const keysOf = new Map();
+  for (const [key, id] of alias) (keysOf.get(id) || keysOf.set(id, []).get(id)).push(key);
+  const hits = [];
+  for (const a of authors.values()) {
+    const keys = [norm(a.ko), norm(a.en), ...(keysOf.get(a.id) || [])];
+    const rank = keys.some(x => x.startsWith(k)) ? 0 : keys.some(x => x.includes(k)) ? 1 : -1;
+    if (rank >= 0) hits.push([rank, a]);
+  }
+  return hits.sort((x, y) => x[0] - y[0] || x[1].ko.localeCompare(y[1].ko, "ko")).slice(0, 8).map(h => h[1]);
+}
+const closeSuggest = () => document.querySelectorAll(".suggest ul").forEach(u => { u.hidden = true; });
+function attachSuggest(input, onPick) {
+  const ul = document.createElement("ul");
+  ul.setAttribute("role", "listbox");
+  ul.hidden = true;
+  input.after(ul);
+  input.setAttribute("role", "combobox");
+  input.setAttribute("aria-autocomplete", "list");
+  input.setAttribute("aria-expanded", "false");
+  let items = [], sel = -1, frame = 0;
+  const close = () => { ul.hidden = true; sel = -1; input.setAttribute("aria-expanded", "false"); };
+  const paint = () => {
+    ul.innerHTML = items.map((a, i) => `<li role="option" data-i="${i}" aria-selected="${i === sel}">${esc(a.ko)}<small>${esc(a.en)}</small></li>`).join("");
+    ul.hidden = !items.length;
+    input.setAttribute("aria-expanded", String(!!items.length));
+  };
+  const pick = a => { input.value = a.ko; close(); onPick?.(a); };
+  input.addEventListener("input", () => {
+    cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(() => { items = suggestions(input.value); sel = -1; paint(); });
+  });
+  input.addEventListener("keydown", e => {
+    if (e.isComposing || e.keyCode === 229) return;   // 한글 조합 중에는 손대지 않는다
+    if (ul.hidden) return;
+    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+      e.preventDefault();
+      sel = (sel + (e.key === "ArrowDown" ? 1 : -1) + items.length) % items.length;
+      paint();
+    } else if (e.key === "Enter" && sel >= 0) { e.preventDefault(); pick(items[sel]); }
+    else if (e.key === "Escape") close();
+  });
+  ul.addEventListener("pointerdown", e => {
+    const li = e.target.closest("li");
+    if (!li) return;
+    e.preventDefault();
+    pick(items[+li.dataset.i]);
+  });
+  input.addEventListener("blur", close);
 }
 document.getElementById("searchForm").onsubmit = e => {
   e.preventDefault();
+  closeSuggest();
   const q = document.getElementById("q").value.trim();
   if (!q) return;
   const a = findAuthor(q) || addAuthor({ ko: q });
@@ -904,6 +1018,7 @@ document.getElementById("searchForm").onsubmit = e => {
 };
 document.getElementById("routeForm").onsubmit = e => {
   e.preventDefault();
+  closeSuggest();
   const fromIn = document.getElementById("r-from"), toIn = document.getElementById("r-to");
   const A = findAuthor(fromIn.value), B = findAuthor(toIn.value);
   showForm = false;
@@ -917,6 +1032,10 @@ document.getElementById("routeForm").onsubmit = e => {
 };
 
 /* ───────────── 시작 ───────────── */
+attachSuggest(document.getElementById("q"), () => document.getElementById("searchForm").requestSubmit());
+attachSuggest(document.getElementById("r-from"));
+attachSuggest(document.getElementById("r-to"));
 renderLegend(); rebuild(); renderPage();
-requestAnimationFrame(() => { centerOnFocus(); Object.assign(view, viewTarget); tick(); });
+requestAnimationFrame(() => { centerOnFocus(); Object.assign(view, viewTarget); wake(); });
+window.addEventListener("resize", wake);
 </script>
