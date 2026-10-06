@@ -10,9 +10,19 @@
 - **최단 영향 경로**: 두 작가를 넣으면 '언급한 방향'으로 이어지는 최단 경로를 찾고, 없으면 방향을 무시해 다시 찾는다.
 - **확장**: claude.ai 아티팩트로 열면 Claude에게 '좋아한 작가'와 '이 작가를 좋아한 작가'를 더 찾게 할 수 있다. 직접 추가도 된다(브라우저에 저장).
 
+## 파일
+- `app.html` — 원본. claude.ai 아티팩트에는 이 파일을 그대로 올린다.
+- `index.html` — GitHub Pages용 완성 페이지. `python3 scripts/build.py`로 `app.html`에서 만든다. 직접 고치지 않는다.
+
+## 공개 주소
+- Claude 계정 없이: https://yangduckduck-source.github.io/didactic-spoon/ (GitHub Pages, Claude 찾기 없음)
+- Claude 계정으로: claude.ai 아티팩트 링크 (Claude 찾기 가능)
+
+두 곳 모두 '직접 추가'는 각자 브라우저에만 저장된다. 테스터는 작가 페이지 아래 "내가 추가한 항목 복사"로 보내 줄 수 있다.
+
 ## 데이터
-`index.html` 안의 `SEED_AUTHORS`, `SEED_MENTIONS`. 각 언급은 `[from, to, 관계, 매체, 출처, 연도, 맥락, 확인필요]`.
+`app.html` 안의 `SEED_AUTHORS`, `SEED_MENTIONS`. 각 언급은 `[from, to, 관계, 매체, 출처, 연도, 맥락, 확인필요]`.
 마지막 값이 `1`이면 출처는 있으나 원문 대조를 아직 못 한 항목으로, 화면에 '확인 필요'로 표시된다.
 
 ## 실행
-`index.html`을 브라우저로 열면 된다. 외부 라이브러리 없음.
+`index.html`을 브라우저로 열면 된다. `app.html`을 고쳤으면 `python3 scripts/build.py`를 다시 돌린다. 외부 라이브러리 없음.
