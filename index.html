@@ -316,6 +316,17 @@ const SEED_AUTHORS = [
   ["woolf","버지니아 울프","Virginia Woolf","영국","1882–1941",["울프"]],
   ["vargasllosa","마리오 바르가스 요사","Mario Vargas Llosa","페루","1936–2025",["바르가스 요사","Vargas Llosa"]],
   ["rushdie","살만 루슈디","Salman Rushdie","영국(인도 출생)","1947–",["루슈디"]],
+  ["moyan", "모옌", "Mo Yan", "중국", "1955–", ["莫言", "모얀"]],
+  ["yuhua", "위화", "Yu Hua", "중국", "1960–", ["余华", "余華"]],
+  ["kawabata", "가와바타 야스나리", "Yasunari Kawabata", "일본", "1899–1972", ["가와바타"]],
+  ["luxun", "루쉰", "Lu Xun", "중국", "1881–1936", ["魯迅", "鲁迅"]],
+  ["laoshe", "라오서", "Lao She", "중국", "1899–1966", ["老舍"]],
+  ["shencongwen", "선충원", "Shen Congwen", "중국", "1902–1988", ["沈從文", "심종문"]],
+  ["mishima", "미시마 유키오", "Yukio Mishima", "일본", "1925–1970", ["미시마"]],
+  ["strout", "엘리자베스 스트라우트", "Elizabeth Strout", "미국", "1956–", []],
+  ["jeonkyunglin", "전경린", "Jeon Kyung-rin", "한국", "1962–", []],
+  ["leehyekyung", "이혜경", "Lee Hye-kyung", "한국", "1960–", []],
+  ["kiminsook", "김인숙", "Kim In-suk", "한국", "1963–", []],
   ["choiyun", "최윤", "Choi Yun", "한국", "1953–", []],
   ["kimbyungik", "김병익", "Kim Byong-ik", "한국 (평론가)", "1938–", []],
   ["kimjuyeon", "김주연", "Kim Ju-yeon", "한국 (평론가)", "1941–", []],
@@ -763,11 +774,33 @@ const SEED_MENTIONS = [
   ["kenliu", "slhuang", "애독", "추천", "Five Books 「최고의 사변소설」", "2020", "추천 다섯 권에 『제로섬 게임』을 넣었다."],
   ["kenliu", "elmohtar", "애독", "추천", "Five Books 「최고의 사변소설」", "2020", "추천 다섯 권에 엘모흐타르·글래드스턴의 『시간 전쟁에서 지는 방법』을 넣었다."],
   ["kenliu", "gladstone", "애독", "추천", "Five Books 「최고의 사변소설」", "2020", "같은 책의 공저자."],
+  ["moyan", "marquez", "애독", "에세이·연설", "「두 개의 불타는 화로: 가르시아 마르케스와 포크너」 / 노벨문학상 수상 강연", "1986 / 2012", "『백년의 고독』을 가장 큰 영향을 준 소설로 꼽았다. 두 거장을 '불타는 화로', 자신을 '얼음 덩어리'에 빗대며 너무 가까이 가면 녹아 버린다고 했다."],
+  ["moyan", "faulkner", "애독", "에세이·연설", "「두 개의 불타는 화로」 / 노벨문학상 수상 강연", "1986 / 2012", "『소리와 분노』를 읽고, 나만의 땅이 있어야 한다는 걸 배워 '가오미 둥베이향'을 지었다."],
+  ["moyan", "luxun", "애독", "인터뷰", "노벨상 수상 직후 인터뷰 (China Daily)", "2012", "\"루쉰, 라오서, 선충원이 나보다 노벨상을 받을 자격이 있다.\" 루쉰에게서 깊이를 배웠다고 했다."],
+  ["moyan", "laoshe", "애독", "인터뷰", "노벨상 수상 직후 인터뷰 (China Daily)", "2012", "라오서에게서 유머를 배웠다고 했다."],
+  ["moyan", "shencongwen", "스승", "인터뷰", "노벨상 수상 직후 인터뷰 (China Daily)", "2012", "정규 교육 없이 학교를 일찍 떠난 처지가 같아 각별한 친밀감을 느꼈고, 인물을 다루는 법을 그에게서 배웠다고 했다."],
+  ["moyan", "mishima", "애독", "인터뷰", "여러 인터뷰", "—", "포크너·마르케스와 함께 미시마 유키오, 오에 겐자부로 같은 일본 작가에게서 많은 것을 얻었다고 말했다.", 1],
+  ["moyan", "oe", "애독", "인터뷰", "여러 인터뷰", "—", "많은 것을 얻은 일본 작가로 오에 겐자부로를 들었다.", 1],
+  ["oe", "moyan", "동료", "방문", "모옌의 고향 산둥성 가오미 방문", "2005", "모옌의 고향을 직접 찾았고, 2009년 베이징 문학상 시상식에서 나란히 앉았다.", 1],
+  ["yuhua", "kawabata", "스승", "에세이", "산문 (치과 수련 시절 회고)", "1979", "닝보에서 치과 수련을 받던 시절 가와바타를 읽고, 글쓰기는 사람의 감정을 보여 주는 일임을 깨달았다고 했다."],
+  ["yuhua", "kafka", "애독", "에세이", "산문 「시골 의사」 회고", "1986", "카프카와의 만남을 '운명의 선물'이라 불렀다. 「시골 의사」에서 말들이 부르면 오고 가라면 가는 것을 보고 \"카프카가 그런 자유를 가르쳐 주었다\"고 썼다."],
+  ["yuhua", "luxun", "애독", "인터뷰·에세이", "LA Review of Books 인터뷰 / 산문 「루쉰」", "—", "교과서로 배울 땐 유일하게 싫어한 작가였지만, 「광인일기」를 다시 읽고 사로잡혀 '20세기에 가장 좋아하는 작가'가 되었다."],
+  ["yuhua", "shencongwen", "애독", "인터뷰", "LA Review of Books 인터뷰", "—", "가장 저평가된 작가였다며, 선충원의 손에서는 풍경이 살과 피를 지닌 인물이 된다고 했다."],
+  ["yuhua", "borges", "오마주", "작품", "『4월 3일 사건』", "1987", "초기 작품은 보르헤스·포크너·카프카를 읽은 자유에서 나왔고, 표제작은 보르헤스 「남부」의 달만과 닮았다는 평을 받는다.", 1],
+  ["shinkyungsook", "proust", "애독", "인터뷰", "월간 객석 인터뷰", "2013", "프랑스에서 『외딴방』의 심사평에 프루스트를 닮았다는 말이 나와 기뻤다며 \"좋아하는 작가거든요\"라고 말했다."],
+  ["shinkyungsook", "chosehui", "애독", "필사", "습작기 필사", "—", "『난장이가 쏘아올린 작은 공』을 필사하며 자기 문체를 키웠다고 알려져 있다.", 1],
+  ["eunheekyung", "hwangjeongeun", "애독", "인터뷰", "알라딘 저자 인터뷰", "—", "함께 읽고 싶은 작가를 묻자 \"최근에는 황정은 작가 소설을 좋게 읽었다\"고 답했다."],
+  ["eunheekyung", "kimyeonsu", "애독", "인터뷰", "알라딘 저자 인터뷰", "—", "김연수의 『시절일기』도 잘 봤다고 했다."],
+  ["eunheekyung", "strout", "애독", "인터뷰", "알라딘 저자 인터뷰", "—", "스트라우트의 『무엇이든 가능하다』가 좋았다며 \"최근엔 그런 섬세한 소설이 좋다\"고 했다."],
+  ["eunheekyung", "jeonkyunglin", "동료", "인터뷰", "에스콰이어 코리아 인터뷰", "—", "데뷔 무렵 함께 거론되어 지금까지 꾸준히 쓰는 동료로 전경린을 들었다."],
+  ["eunheekyung", "leehyekyung", "동료", "인터뷰", "에스콰이어 코리아 인터뷰", "—", "같은 맥락에서 이혜경을 들었다."],
+  ["eunheekyung", "kiminsook", "동료", "인터뷰", "에스콰이어 코리아 인터뷰", "—", "같은 맥락에서 김인숙을 들었다."],
+  ["eunheekyung", "baesuah", "동료", "인터뷰", "에스콰이어 코리아 인터뷰", "—", "같은 맥락에서 배수아를 들었다."],
   ["limsola","kimkitae","애독","추천사","『두 사람의 인터내셔널』 추천사","2024","\"김기태의 소설은 내게 완전한 기쁨을 주었다.\""],
 ];
 
 /* 관심 작가 — 서가 주인이 가장 아끼는 작가들. 그래프에서 테가 진하고, 흐린 원 후보에서 앞선다 */
-const FEATURED = new Set(["kimaeran", "parkmingyu", "borges", "marquez", "lessing", "kenliu", "leguin", "butler", "pkdick", "faulkner", "mcewan", "ishiguro", "barad", "latour", "poe", "seomiae", "tedchiang", "joehill", "djuna", "hwangjeongeun", "kafka", "jowalton", "canetti", "jamison", "kuhyoseo", "choiinhun", "parktaewon", "munro", "adichie", "oates", "leegiho", "jangkangmyoung", "kwonyeoseon", "leeseungu", "maupassant", "oe", "jelinek", "kimyeonsu", "kimkitae", "lahiri", "tanizaki", "daudet", "leecheongjun", "choiyun"]);
+const FEATURED = new Set(["kimaeran", "parkmingyu", "borges", "marquez", "lessing", "kenliu", "leguin", "butler", "pkdick", "faulkner", "mcewan", "ishiguro", "barad", "latour", "poe", "seomiae", "tedchiang", "joehill", "djuna", "hwangjeongeun", "kafka", "jowalton", "canetti", "jamison", "kuhyoseo", "choiinhun", "parktaewon", "munro", "adichie", "oates", "leegiho", "jangkangmyoung", "kwonyeoseon", "leeseungu", "maupassant", "oe", "jelinek", "kimyeonsu", "kimkitae", "lahiri", "tanizaki", "daudet", "leecheongjun", "choiyun", "moyan", "yuhua", "shinkyungsook", "eunheekyung", "jeonkyunglin", "leehyekyung"]);
 /* 2020년 이후 신춘문예 당선자 — 작가 페이지 표 아래에 주석으로 표시 */
 const DEBUT = {};
 
