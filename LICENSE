@@ -1,0 +1,59 @@
+작가의 서가 (Writers' Shelf)
+Copyright (c) 2026 yangduckduck-source. All rights reserved.
+
+[한국어]
+
+1. 허용
+   - 누구나 이 웹앱을 무료로 이용할 수 있습니다.
+   - 누구나 웹앱 링크를 자유롭게 공유할 수 있습니다.
+   - 이용 화면의 스크린샷과 영상을 찍어 공유할 수 있습니다.
+   - '직접 추가' 기능으로 작가와 언급을 제보할 수 있습니다.
+
+2. 금지 (저작권자의 서면 허락이 없는 한)
+   - 소스 코드, 디자인, 텍스트, 그리고 작가·언급을 고르고 엮고 해설한
+     데이터 편집물의 전부 또는 일부를 복제·수정·재배포하는 것
+   - 이 웹앱이나 그 일부를 다른 프로젝트·서비스·상품에 쓰는 것
+   - 이 웹앱을 자신의 작품인 것처럼 게시하거나 다른 곳에 다시 호스팅하는 것
+   - 상업적으로 이용하는 것
+
+3. 웹앱 안에 인용한 작가들의 문장과 제목은 각 저작권자에게 속하며,
+   출처를 밝혀 인용한 것입니다. 이 라이선스는 그 인용문에 대한 권리를
+   주장하지 않습니다.
+
+4. GitHub 이용약관에 따라, 공개 저장소의 코드는 GitHub 안에서 열람하고
+   포크할 수 있습니다. 이것은 위 2항의 이용 허락이 아닙니다.
+
+5. 이 웹앱과 그 데이터는 있는 그대로 제공되며, 어떠한 보증도 하지 않습니다.
+   작가 간 언급의 정확성은 표시된 출처로 확인하시기 바랍니다.
+
+이용 허락 문의: https://github.com/yangduckduck-source
+
+[English]
+
+1. Permitted
+   - Anyone may use this web app free of charge.
+   - Anyone may freely share links to the web app.
+   - Screenshots and videos of the app may be recorded and shared.
+   - Users may submit authors and mentions through the "add" feature.
+
+2. Prohibited without prior written permission from the copyright holder
+   - Copying, modifying, or redistributing the source code, design, text,
+     or the compiled dataset (the selection, arrangement, and annotation
+     of authors and mentions), in whole or in part
+   - Using this web app or any part of it in another project, service,
+     or product
+   - Presenting this web app as one's own work or re-hosting it elsewhere
+   - Any commercial use
+
+3. Quotations and titles from other writers belong to their respective
+   copyright holders and are quoted with attribution. This license claims
+   no rights over them.
+
+4. Under the GitHub Terms of Service, code in a public repository may be
+   viewed and forked within GitHub. This does not grant any of the rights
+   listed in section 2.
+
+5. This web app and its data are provided "as is", without warranty of any
+   kind. Please verify each mention against the source shown.
+
+For permission requests: https://github.com/yangduckduck-source
