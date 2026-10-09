@@ -147,6 +147,15 @@ form.add input, form.add select { border: 1px solid var(--line); border-radius: 
 form.add .full { grid-column: 1 / -1; }
 form.add .actions { grid-column: 1 / -1; display: flex; gap: 6px; justify-content: flex-end; }
 .foot { margin-top: 28px; font-size: 12px; color: var(--faint); }
+h1 .badge { display: inline-block; vertical-align: 6px; margin-left: 8px; font-family: var(--font-body); font-size: 11px; font-weight: 600; letter-spacing: .04em; color: var(--ink); background: var(--ink-soft); border-radius: 4px; padding: 1px 6px; }
+h1 .badge.debut { color: var(--warn-fg); background: var(--warn-bg); }
+.tnote { font-size: 12.5px; color: var(--muted); margin: 8px 0 0; }
+.shelf { margin: 6px 0; }
+.shelf summary { cursor: pointer; font-size: 15px; font-weight: 600; padding: 4px 0; list-style-position: outside; }
+.shelf summary .count { color: var(--faint); font-weight: 400; }
+.shelf .backlinks { padding: 8px 0 4px; }
+.chip.on { border-color: var(--ink); color: var(--ink); }
+.chip .n { font-size: 11px; color: var(--faint); }
 .guide { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 16px 18px; margin-bottom: 24px; font-size: 13.5px; }
 .guide h3 { font-family: var(--font-display); font-size: 17px; margin: 0 0 6px; text-wrap: balance; }
 .guide .tag-beta { display: inline-block; font-family: var(--font-body); font-size: 11px; font-weight: 600; letter-spacing: .06em; color: var(--ink); background: var(--ink-soft); border-radius: 4px; padding: 1px 6px; margin-left: 6px; vertical-align: 2px; }
@@ -308,6 +317,111 @@ const SEED_AUTHORS = [
   ["woolf","버지니아 울프","Virginia Woolf","영국","1882–1941",["울프"]],
   ["vargasllosa","마리오 바르가스 요사","Mario Vargas Llosa","페루","1936–2025",["바르가스 요사","Vargas Llosa"]],
   ["rushdie","살만 루슈디","Salman Rushdie","영국(인도 출생)","1947–",["루슈디"]],
+  ["kimaeran", "김애란", "Kim Ae-ran", "한국", "1980–", []],
+  ["lessing", "도리스 레싱", "Doris Lessing", "영국", "1919–2013", ["레싱", "도리르 레싱"]],
+  ["kenliu", "켄 리우", "Ken Liu", "미국", "1976–", ["켄리우"]],
+  ["boffa", "알레산드로 보파", "Alessandro Boffa", "이탈리아", "1964–", ["보파", "알렌산드로 보파"]],
+  ["leguin", "어슐러 K. 르 귄", "Ursula K. Le Guin", "미국", "1929–2018", ["르 귄", "르귄", "어슐러 르귄", "Le Guin"]],
+  ["butler", "옥타비아 버틀러", "Octavia E. Butler", "미국", "1947–2006", ["버틀러", "옥타비아 E. 버틀러"]],
+  ["mcewan", "이언 매큐언", "Ian McEwan", "영국", "1948–", ["매큐언"]],
+  ["amhomes", "A. M. 홈스", "A. M. Homes", "미국", "1961–", ["A.M.홈즈", "에이엠 홈스"]],
+  ["ishiguro", "가즈오 이시구로", "Kazuo Ishiguro", "영국(일본 출생)", "1954–", ["이시구로"]],
+  ["barad", "캐런 버라드", "Karen Barad", "미국 (이론물리학자·철학자)", "1956–", ["버라드"]],
+  ["latour", "브뤼노 라투르", "Bruno Latour", "프랑스 (철학자·사회학자)", "1947–2022", ["라투르"]],
+  ["otsuichi", "오츠이치", "Otsuichi", "일본", "1978–", ["乙一"]],
+  ["seomiae", "서미애", "Seo Mi-ae", "한국", "1965–", []],
+  ["joehill", "조 힐", "Joe Hill", "미국", "1972–", ["조힐"]],
+  ["kimseongjung", "김성중", "Kim Seong-jung", "한국", "1975–", []],
+  ["djuna", "듀나", "Djuna", "한국", "", ["DJUNA"]],
+  ["seodaekyung", "서대경", "Seo Dae-kyung", "한국 (시인)", "", []],
+  ["jowalton", "조 월튼", "Jo Walton", "영국(웨일스)·캐나다", "1964–", ["조 왈튼", "월튼"]],
+  ["canetti", "엘리아스 카네티", "Elias Canetti", "불가리아 출생 · 영국", "1905–1994", ["카네티"]],
+  ["songmikyung", "송미경", "Song Mi-kyung", "한국 (동화작가)", "", []],
+  ["jamison", "레슬리 제이미슨", "Leslie Jamison", "미국", "1983–", ["제이미슨"]],
+  ["kuhyoseo", "구효서", "Ku Hyo-seo", "한국", "1958–", []],
+  ["ohsooyeon", "오수연", "Oh Soo-yeon", "한국", "", []],
+  ["choiinhun", "최인훈", "Choi In-hun", "한국", "1936–2018", []],
+  ["munro", "앨리스 먼로", "Alice Munro", "캐나다", "1931–2024", ["먼로"]],
+  ["adichie", "치마만다 응고지 아디치에", "Chimamanda Ngozi Adichie", "나이지리아", "1977–", ["아디치에", "치마만다 응고지"]],
+  ["oates", "조이스 캐럴 오츠", "Joyce Carol Oates", "미국", "1938–", ["오츠"]],
+  ["leegiho", "이기호", "Lee Ki-ho", "한국", "1972–", []],
+  ["jangkangmyoung", "장강명", "Chang Kang-myoung", "한국", "1975–", []],
+  ["kwonyeoseon", "권여선", "Kwon Yeo-sun", "한국", "1965–", []],
+  ["leeseungu", "이승우", "Lee Seung-u", "한국", "1959–", []],
+  ["maupassant", "기 드 모파상", "Guy de Maupassant", "프랑스", "1850–1893", ["모파상"]],
+  ["oe", "오에 겐자부로", "Kenzaburō Ōe", "일본", "1935–2023", ["오에", "大江健三郎"]],
+  ["ende", "미하엘 엔데", "Michael Ende", "독일", "1929–1995", ["엔데"]],
+  ["jelinek", "엘프리데 옐리네크", "Elfriede Jelinek", "오스트리아", "1946–", ["옐리네크"]],
+  ["aporter", "앤드루 포터", "Andrew Porter", "미국", "1972–", ["앤드루포터"]],
+  ["jeonkyunglin", "전경린", "Jeon Kyung-rin", "한국", "1962–", []],
+  ["choiyun", "최윤", "Choi Yun", "한국", "1953–", []],
+  ["jungyihyun", "정이현", "Jung Yi-hyun", "한국", "1972–", ["정이헌"]],
+  ["jungyoungsoo", "정영수", "Jung Young-soo", "한국", "", []],
+  ["maruyama", "마루야마 겐지", "Kenji Maruyama", "일본", "1943–", ["마루야마겐지", "丸山健二"]],
+  ["lahiri", "줌파 라히리", "Jhumpa Lahiri", "미국(영국 출생)", "1967–", ["라히리"]],
+  ["leeyunri", "이윤리", "", "한국", "", []],
+  ["kimkeumhee", "김금희", "Kim Keum-hee", "한국", "1979–", []],
+  ["parksang", "박상", "Park Sang", "한국", "", []],
+  ["tanizaki", "다니자키 준이치로", "Jun'ichirō Tanizaki", "일본", "1886–1965", ["나니자키 준이치로", "다니자키", "谷崎潤一郎"]],
+  ["daudet", "알퐁스 도데", "Alphonse Daudet", "프랑스", "1840–1897", ["도데"]],
+  ["hwangsunwon", "황순원", "Hwang Sun-won", "한국", "1915–2000", []],
+  ["leehyekyung", "이혜경", "Lee Hye-kyung", "한국", "1960–", []],
+  ["emoon", "엘리자베스 문", "Elizabeth Moon", "미국", "1945–", []],
+  ["lulumiller", "룰루 밀러", "Lulu Miller", "미국", "", ["룰루밀러"]],
+  ["epictetus", "에픽테토스", "Epictetus", "고대 로마 (그리스 철학자)", "50?–135?", []],
+  ["keegan", "클레어 키건", "Claire Keegan", "아일랜드", "1968–", ["키건"]],
+  ["bangmijin", "방미진", "Bang Mi-jin", "한국 (동화작가)", "", []],
+  ["byars", "벳시 바이어스", "Betsy Byars", "미국", "1928–2020", ["베치 바이어스", "바이어스"]],
+  ["d_leenari", "이나리", "", "한국", "", []],
+  ["d_parkhyungseo", "박형서", "", "한국", "", []],
+  ["d_kimjiyeon", "김지연", "", "한국", "", []],
+  ["d_kimkyungsook", "김경숙", "", "한국", "", []],
+  ["d_hyunkyungmi", "현경미", "", "한국", "", []],
+  ["d_kimseoyeon", "김서연", "", "한국", "", []],
+  ["d_hankyunghee", "한경희", "", "한국", "", []],
+  ["d_yoonsungmin", "윤성민", "", "한국", "", []],
+  ["d_leejung", "이정", "", "한국", "", []],
+  ["d_soyoonjung", "소윤정", "", "한국", "", []],
+  ["d_seojangwon", "서장원", "", "한국", "", []],
+  ["d_kwonheejin", "권희진", "", "한국", "", []],
+  ["d_kimyeongjin", "기명진", "", "한국", "", []],
+  ["d_limtaeksu", "임택수", "", "한국", "", []],
+  ["d_leejihye", "이지혜", "", "한국", "", []],
+  ["d_josungbaek", "조성백", "", "한국", "", []],
+  ["d_heosunghwan", "허성환", "", "한국", "1986–", []],
+  ["d_kimyoungeun", "김영은", "", "한국", "", []],
+  ["liucixin", "류츠신", "Liu Cixin", "중국", "1963–", ["유자흔", "劉慈欣"]],
+  ["laozi", "노자", "Laozi", "중국 춘추시대", "", ["老子"]],
+  ["ellison", "할런 엘리슨", "Harlan Ellison", "미국", "1934–2018", []],
+  ["sanderson", "셔우드 앤더슨", "Sherwood Anderson", "미국", "1876–1941", []],
+  ["austen", "제인 오스틴", "Jane Austen", "영국", "1775–1817", ["오스틴"]],
+  ["proust", "마르셀 프루스트", "Marcel Proust", "프랑스", "1871–1922", ["프루스트"]],
+  ["bohr", "닐스 보어", "Niels Bohr", "덴마크 (물리학자)", "1885–1962", []],
+  ["haraway", "도나 해러웨이", "Donna Haraway", "미국", "1944–", ["해러웨이"]],
+  ["serres", "미셸 세르", "Michel Serres", "프랑스 (철학자)", "1930–2019", []],
+  ["hawthorne", "너새니얼 호손", "Nathaniel Hawthorne", "미국", "1804–1864", ["호손"]],
+  ["welty", "유도라 웰티", "Eudora Welty", "미국", "1909–2001", []],
+  ["oconnor", "플래너리 오코너", "Flannery O'Connor", "미국", "1925–1964", []],
+  ["achebe", "치누아 아체베", "Chinua Achebe", "나이지리아", "1930–2013", ["아체베"]],
+  ["carroll", "루이스 캐럴", "Lewis Carroll", "영국", "1832–1898", []],
+  ["sartre", "장폴 사르트르", "Jean-Paul Sartre", "프랑스", "1905–1980", ["사르트르"]],
+  ["watanabekazuo", "와타나베 가즈오", "Kazuo Watanabe", "일본 (불문학자)", "1901–1975", ["渡辺一夫"]],
+  ["blake", "윌리엄 블레이크", "William Blake", "영국", "1757–1827", []],
+  ["pynchon", "토머스 핀천", "Thomas Pynchon", "미국", "1937–", ["핀천"]],
+  ["starnone", "도메니코 스타르노네", "Domenico Starnone", "이탈리아", "1943–", []],
+  ["murasaki", "무라사키 시키부", "Murasaki Shikibu", "일본 헤이안 시대", "973?–1014?", []],
+  ["kraus", "카를 크라우스", "Karl Kraus", "오스트리아", "1874–1936", []],
+  ["lem", "스타니스와프 렘", "Stanisław Lem", "폴란드", "1921–2006", ["렘"]],
+  ["asimov", "아이작 아시모프", "Isaac Asimov", "미국", "1920–1992", ["아시모프"]],
+  ["card", "오슨 스콧 카드", "Orson Scott Card", "미국", "1951–", []],
+  ["bester", "알프레드 베스터", "Alfred Bester", "미국", "1913–1987", []],
+  ["parkwanseo", "박완서", "Park Wan-suh", "한국", "1931–2011", []],
+  ["pyunhyeyoung", "편혜영", "Pyun Hye-young", "한국", "1972–", []],
+  ["yoonsunghee", "윤성희", "Yun Sung-hee", "한국", "1973–", []],
+  ["jungmikyung", "정미경", "Jung Mi-kyung", "한국", "1960–2017", []],
+  ["eunheekyung", "은희경", "Eun Hee-kyung", "한국", "1959–", []],
+  ["cheonhyunwoo", "천현우", "Cheon Hyun-woo", "한국", "", []],
+  ["zola", "에밀 졸라", "Émile Zola", "프랑스", "1840–1902", ["졸라"]],
 ];
 
 const SEED_MENTIONS = [
@@ -447,8 +561,77 @@ const SEED_MENTIONS = [
   ["marquez","woolf","애독","대담","『구아바 향기』 (플리니오 멘도사와의 대담)","1982","『댈러웨이 부인』의 한 대목이 시간을 다루는 감각을 바꿔 놓았다고 말했다.",1],
   ["vargasllosa","marquez","경쟁","연구서","『가르시아 마르케스: 신 살해의 역사』 (박사 논문)","1971","마르케스 연구로 박사 논문을 쓸 만큼 가까웠으나, 1976년 멕시코시티에서 주먹을 날린 뒤 30년 넘게 절연했다."],
   ["rushdie","marquez","애독","에세이","「가브리엘 가르시아 마르케스」 (『상상의 고향』)","1982","『예고된 죽음의 연대기』를 읽고 마르케스의 마술적 사실주의를 탈식민 세계의 리얼리즘으로 읽어 냈다.",1],
+  ["kimaeran", "kimyeonsu", "동료", "산문", "『잊기 좋은 이름』", "2019", "아끼는 동료 작가로 김연수를 따로 써 내려갔다."],
+  ["kimaeran", "pyunhyeyoung", "동료", "산문", "『잊기 좋은 이름』", "2019", "가까운 동료 편혜영을 아끼는 작가로 적었다."],
+  ["kimaeran", "yoonsunghee", "동료", "산문", "『잊기 좋은 이름』", "2019", "같은 책에서 윤성희를 아끼는 작가로 다룬다."],
+  ["kwonyeoseon", "jungmikyung", "애독", "인터뷰", "GQ Korea 인터뷰 「애매해서 좋아요」", "2008", "작가 전체보다 '잘 쓴 시기'의 작품을 좋아한다며 정미경의 어떤 시기를 꼽았다."],
+  ["kwonyeoseon", "eunheekyung", "애독", "인터뷰", "GQ Korea 인터뷰 「애매해서 좋아요」", "2008", "같은 맥락에서 은희경의 특정 시기 작품을 좋아한다고 했다."],
+  ["kwonyeoseon", "yoonsunghee", "애독", "인터뷰", "GQ Korea 인터뷰 「애매해서 좋아요」", "2008", "\"윤성희는 쭉 잘 쓰는 것 같아요.\""],
+  ["jangkangmyoung", "orwell", "애독", "인터뷰", "한국기자협회보 인터뷰", "2011", "존경하는 소설가로 '저널리스트이면서 소설가'인 오웰을 꼽았다."],
+  ["jangkangmyoung", "dostoevsky", "오마주", "작품·인터뷰", "『재수사』 / 경향신문 인터뷰", "2022", "제일 좋아하는 작가로 꼽았고, 『재수사』의 살해 현장을 『백치』의 결말과 닮게 그렸다."],
+  ["leegiho", "cheonhyunwoo", "애독", "인터뷰", "한국경제 [작가의 책갈피]", "2022", "『쇳밥일지』를 읽으며 자기 소설이 부끄러웠다고 말했다."],
+  ["djuna", "lem", "애독", "인터뷰", "한국일보 인터뷰", "2008", "『솔라리스』를 좋아한다고 밝혔다."],
+  ["djuna", "asimov", "애독", "인터뷰", "한국일보 인터뷰", "2008", "아시모프의 로봇 시리즈도 좋아한다고 했다."],
+  ["djuna", "card", "애독", "인터뷰", "한국일보 인터뷰", "2008", "엔더 시리즈를 좋아하는 작품으로 들었다."],
+  ["djuna", "leguin", "애독", "인터뷰", "한국일보 인터뷰", "2008", "르 귄의 헤인 시리즈를 좋아한다고 했다."],
+  ["djuna", "bester", "애독", "인터뷰", "한국일보 인터뷰", "2008", "베스터의 소설들도 좋아한다고 했다."],
+  ["kimkeumhee", "parkwanseo", "애독", "인터뷰", "인터뷰 (원문 미확인)", "—", "박완서를 정말 좋아한다고 밝혀 왔다.", 1],
+  ["leeseungu", "kafka", "오마주", "작품", "소설집 표제 (카프카의 구절에서 빌려 옴)", "2001", "카프카의 한 구절을 소설집 제목으로 삼아 일상 밑의 불안을 탐색했다.", 1],
+  ["choiinhun", "parktaewon", "오마주", "작품", "연작 『소설가 구보씨의 일일』", "1970–1972", "박태원의 「소설가 구보씨의 일일」을 같은 제목으로 다시 써 1970년대 서울을 걸었다."],
+  ["lessing", "tolstoy", "애독", "에세이", "「작은 개인의 목소리」 (The Small Personal Voice)", "1957", "19세기 리얼리즘을 문학의 최고점으로 꼽으며 톨스토이를 첫머리에 두었다."],
+  ["lessing", "stendhal", "애독", "에세이", "「작은 개인의 목소리」", "1957", "같은 글에서 스탕달을 그 정점에 세웠다."],
+  ["lessing", "dostoevsky", "애독", "에세이", "「작은 개인의 목소리」", "1957", "같은 글에서 도스토옙스키를 함께 꼽았다."],
+  ["lessing", "balzac", "애독", "에세이", "「작은 개인의 목소리」", "1957", "같은 글에서 발자크를 함께 꼽았다."],
+  ["lessing", "turgenev", "애독", "에세이", "「작은 개인의 목소리」", "1957", "같은 글에서 투르게네프를 함께 꼽았다."],
+  ["lessing", "chekhov", "애독", "에세이", "「작은 개인의 목소리」", "1957", "같은 글에서 체호프를 함께 꼽았다."],
+  ["kenliu", "liucixin", "번역", "번역", "『삼체』 영어 번역 (The Three-Body Problem)", "2014", "류츠신의 『삼체』를 영어로 옮겨 휴고상 수상으로 이어지게 했다."],
+  ["kenliu", "tedchiang", "애독", "인터뷰", "여러 인터뷰", "—", "테드 창을 아끼는 작가로 언급해 왔다.", 1],
+  ["leguin", "laozi", "번역", "번역", "『도덕경』 영역 (Lao Tzu: Tao Te Ching)", "1997", "평생 곁에 둔 『도덕경』을 직접 영어로 옮겼다."],
+  ["leguin", "woolf", "오마주", "에세이", "「과학소설과 브라운 부인」 (Science Fiction and Mrs Brown)", "1975", "울프의 「베넷 씨와 브라운 부인」을 받아 SF에도 '브라운 부인'이 있어야 한다고 썼다."],
+  ["leguin", "pkdick", "애독", "서평", "필립 K. 딕 평", "1970년대", "딕을 \"우리 땅에서 난 보르헤스\"라 불렀다.", 1],
+  ["butler", "ellison", "스승", "워크숍", "클라리온 SF 작가 워크숍", "1970", "엘리슨의 권유로 워크숍에 참가했고, 그가 그녀의 첫 단편을 사들였다."],
+  ["joehill", "king", "스승", "가족", "—", "—", "아버지 스티븐 킹. 이름을 감추고 '조 힐'로 데뷔했다."],
+  ["faulkner", "cervantes", "애독", "인터뷰", "The Paris Review, The Art of Fiction No. 12", "1956", "『돈키호테』를 해마다 다시 읽는다고 말했다."],
+  ["faulkner", "dickens", "애독", "인터뷰", "The Paris Review, The Art of Fiction No. 12", "1956", "젊은 날 사랑한 작가들을 다시 읽는다며 디킨스를 꼽았다."],
+  ["faulkner", "conrad", "애독", "인터뷰", "The Paris Review, The Art of Fiction No. 12", "1956", "같은 목록에 콘래드를 넣었다."],
+  ["faulkner", "flaubert", "애독", "인터뷰", "The Paris Review, The Art of Fiction No. 12", "1956", "같은 목록에 플로베르를 넣었다."],
+  ["faulkner", "balzac", "애독", "인터뷰", "The Paris Review, The Art of Fiction No. 12", "1956", "같은 목록에 발자크를 넣었다."],
+  ["faulkner", "dostoevsky", "애독", "인터뷰", "The Paris Review, The Art of Fiction No. 12", "1956", "같은 목록에 도스토옙스키를 넣었다."],
+  ["faulkner", "tolstoy", "애독", "인터뷰", "The Paris Review, The Art of Fiction No. 12", "1956", "같은 목록에 톨스토이를 넣었다."],
+  ["faulkner", "shakespeare", "애독", "인터뷰", "The Paris Review, The Art of Fiction No. 12", "1956", "같은 목록에 셰익스피어를 넣었다."],
+  ["faulkner", "sanderson", "스승", "회고", "「셔우드 앤더슨에 관한 노트」 외", "1953", "뉴올리언스 시절 앤더슨의 도움으로 첫 장편 『병사의 보수』를 냈다."],
+  ["mcewan", "austen", "오마주", "작품", "『속죄』 제사(題詞) — 『노생거 사원』", "2001", "『속죄』를 오스틴의 『노생거 사원』 한 대목으로 열었다."],
+  ["ishiguro", "proust", "애독", "연설", "노벨문학상 수상 강연 「나의 20세기 저녁」", "2017", "『스완네 집 쪽으로』의 서곡을 읽으며 기억을 쓰는 법을 배웠다고 말했다."],
+  ["ishiguro", "dostoevsky", "애독", "인터뷰", "여러 인터뷰", "—", "젊은 시절 영향을 준 작가로 도스토옙스키를 꼽아 왔다.", 1],
+  ["ishiguro", "chekhov", "애독", "인터뷰", "여러 인터뷰", "—", "체호프를 영향을 준 작가로 꼽아 왔다.", 1],
+  ["barad", "bohr", "애독", "연구서", "『우주와 중간에서 만나기』 (Meeting the Universe Halfway)", "2007", "보어의 철학-물리학을 토대로 '행위적 실재론'을 세웠다."],
+  ["barad", "haraway", "스승", "연구", "캘리포니아대 산타크루즈 의식사 프로그램", "—", "해러웨이의 '회절' 개념을 이어받아 발전시켰다.", 1],
+  ["latour", "serres", "스승", "대담", "『해명』 (Éclaircissements, 미셸 세르와의 대담)", "1992", "세르와 긴 대담을 나누며 그를 사유의 스승으로 삼았다."],
+  ["poe", "hawthorne", "애독", "서평", "호손 『두 번 들은 이야기』 서평", "1842", "호손의 단편을 상찬하며 '효과의 통일'이라는 단편 이론을 펼쳤다."],
+  ["jowalton", "leguin", "오마주", "작품", "『우리가 사는 다른 세상』 (Among Others)", "2011", "SF를 읽으며 버티는 소녀의 이야기 속에 르 귄을 비롯한 고전 SF를 촘촘히 불러낸다.", 1],
+  ["canetti", "kafka", "애독", "에세이", "『다른 소송: 펠리체에게 보낸 카프카의 편지』", "1969", "카프카가 펠리체에게 보낸 편지를 정밀하게 읽어 낸 책을 썼다."],
+  ["canetti", "kraus", "스승", "회고록", "『귓속의 횃불』 (Die Fackel im Ohr)", "1980", "빈 시절 크라우스의 강연에 매료되어 그를 정신적 스승으로 삼았다고 회고했다."],
+  ["jamison", "carver", "애독", "논픽션", "『리커버링』 (The Recovering)", "2018", "중독과 회복을 쓰며 카버의 삶과 작품을 오래 들여다본다.", 1],
+  ["munro", "welty", "애독", "인터뷰", "The Paris Review, The Art of Fiction No. 137", "1994", "미국 남부 작가들, 특히 웰티에게 큰 영향을 받았다고 말했다.", 1],
+  ["munro", "oconnor", "애독", "인터뷰", "The Paris Review, The Art of Fiction No. 137", "1994", "같은 맥락에서 플래너리 오코너를 들었다.", 1],
+  ["adichie", "achebe", "애독", "강연", "TED 강연 「단 하나의 이야기의 위험」", "2009", "아체베를 읽고 나서야 자기 같은 사람도 책 속에 있을 수 있다는 걸 알았다고 말했다."],
+  ["oates", "carroll", "애독", "에세이", "여러 에세이", "—", "어린 시절 받은 『이상한 나라의 앨리스』가 평생의 책이었다고 밝혀 왔다.", 1],
+  ["maupassant", "flaubert", "스승", "편지", "플로베르와 주고받은 편지", "1870년대", "어머니의 친구였던 플로베르에게 문장을 배웠고, 「비곗덩어리」로 그의 찬사를 받았다."],
+  ["oe", "sartre", "애독", "논문", "도쿄대 불문과 졸업 논문", "1959", "사르트르 소설의 이미지에 관한 졸업 논문을 썼다."],
+  ["oe", "watanabekazuo", "스승", "회고", "여러 에세이", "—", "도쿄대에서 라블레 연구자 와타나베 가즈오를 평생의 스승으로 삼았다."],
+  ["oe", "blake", "오마주", "작품", "『새로운 사람이여 눈을 떠라』", "1983", "블레이크의 시를 실마리로 장애가 있는 아들과의 삶을 썼다."],
+  ["jelinek", "pynchon", "번역", "번역", "『중력의 무지개』 독일어 번역 (공역)", "1981", "핀천의 『중력의 무지개』를 독일어로 옮겼다."],
+  ["lahiri", "starnone", "번역", "번역", "스타르노네 『끈』 영어 번역 (Ties)", "2017", "이탈리아어로 글을 쓰기 시작한 뒤 스타르노네의 소설을 영어로 옮겼다."],
+  ["tanizaki", "murasaki", "번역", "번역", "『겐지 이야기』 현대어역 (潤一郎訳源氏物語)", "1939–1941", "무라사키 시키부의 『겐지 이야기』를 현대 일본어로 옮겼다."],
+  ["daudet", "flaubert", "동료", "회고", "파리 문인 모임 '다섯 사람의 저녁'", "1870년대", "플로베르·졸라·공쿠르·투르게네프와 정기적으로 저녁을 함께했다.", 1],
+  ["daudet", "zola", "동료", "회고", "파리 문인 모임 '다섯 사람의 저녁'", "1870년대", "같은 모임의 동료.", 1],
   ["limsola","kimkitae","애독","추천사","『두 사람의 인터내셔널』 추천사","2024","\"김기태의 소설은 내게 완전한 기쁨을 주었다.\""],
 ];
+
+/* 관심 작가 — 서가 주인이 가장 아끼는 작가들. 그래프에서 테가 진하고, 흐린 원 후보에서 앞선다 */
+const FEATURED = new Set(["kimaeran", "parkmingyu", "borges", "marquez", "lessing", "kenliu", "boffa", "leguin", "butler", "pkdick", "faulkner", "mcewan", "amhomes", "ishiguro", "barad", "latour", "poe", "otsuichi", "seomiae", "tedchiang", "joehill", "kimseongjung", "djuna", "hwangjeongeun", "seodaekyung", "kafka", "jowalton", "canetti", "songmikyung", "jamison", "kuhyoseo", "ohsooyeon", "choiinhun", "parktaewon", "munro", "adichie", "oates", "leegiho", "jangkangmyoung", "kwonyeoseon", "leeseungu", "maupassant", "oe", "ende", "jelinek", "aporter", "jeonkyunglin", "choiyun", "kimyeonsu", "jungyihyun", "jungyoungsoo", "kimkitae", "maruyama", "lahiri", "leeyunri", "kimkeumhee", "parksang", "tanizaki", "daudet", "hwangsunwon", "leehyekyung", "emoon", "lulumiller", "epictetus", "keegan", "bangmijin", "byars"]);
+/* 2020년 이후 신춘문예 당선자 — 작가 페이지 표 아래에 주석으로 표시 */
+const DEBUT = {"d_leenari": "2020년 이후 신춘문예 당선 (연도·지면 확인 필요)", "d_parkhyungseo": "2020년 이후 신춘문예 당선 (연도·지면 확인 필요)", "d_kimjiyeon": "2020년 이후 신춘문예 당선 (연도·지면 확인 필요)", "d_kimkyungsook": "2020년 이후 신춘문예 당선 (연도·지면 확인 필요)", "d_hyunkyungmi": "2020년 이후 신춘문예 당선 (연도·지면 확인 필요)", "d_kimseoyeon": "2020년 이후 신춘문예 당선 (연도·지면 확인 필요)", "d_hankyunghee": "2020년 이후 신춘문예 당선 (연도·지면 확인 필요)", "d_yoonsungmin": "2020년 이후 신춘문예 당선 (연도·지면 확인 필요)", "d_leejung": "2020년 이후 신춘문예 당선 (연도·지면 확인 필요)", "d_soyoonjung": "2020년 이후 신춘문예 당선 (연도·지면 확인 필요)", "d_seojangwon": "2020년 이후 신춘문예 당선 (연도·지면 확인 필요)", "d_kwonheejin": "2024 조선일보 신춘문예 단편소설 「러브레터」 당선", "d_kimyeongjin": "2020년 이후 신춘문예 당선 (연도·지면 확인 필요)", "d_limtaeksu": "2024 동아일보 신춘문예 단편소설 「오랜 날 오랜 밤」 당선", "d_leejihye": "2020년 이후 신춘문예 당선 (연도·지면 확인 필요)", "d_josungbaek": "2020년 이후 신춘문예 당선 (연도·지면 확인 필요)", "d_heosunghwan": "2024 경향신문 신춘문예 소설 부문 당선 (2023.12.31 발표)", "d_kimyoungeun": "2020년 이후 신춘문예 당선 (연도·지면 확인 필요)"};
 
 /* ───────────── 상태 ───────────── */
 const LS = { ai: "authornet:ai:v2", me: "authornet:me:v2", path: "authornet:path:v3", hidden: "authornet:hidden:v1", guide: "authornet:guide:v1", who: "authornet:who:v1" };
@@ -547,7 +730,7 @@ for (const r of meStore) {
 
 const backlinks = id => [...authors.values()].filter(a => a.mentions.some(m => m.to === id));
 // 유명도: 이 서가 안에서 다른 작가들이 그를 언급한 횟수 + 그가 언급한 횟수의 절반
-function fame(id) { return backlinks(id).length + authors.get(id).mentions.length * 0.5; }
+function fame(id) { return backlinks(id).length + authors.get(id).mentions.length * 0.5 + (FEATURED.has(id) ? 3 : 0); }
 let hiddenKinds = new Set(lsGet(LS.hidden, []));
 const visible = m => !!m && !hiddenKinds.has(kindOf(m.kind));
 
@@ -711,6 +894,10 @@ function styleNode(n) {
   else if (n.role === "path") { c.setAttribute("fill", "var(--faint)"); c.setAttribute("stroke", "var(--faint)"); }
   else if (n.role === "fan") { c.setAttribute("fill", "var(--ink-soft)"); c.setAttribute("stroke", "var(--edge-strong)"); }
   else { c.setAttribute("fill", "var(--bg)"); c.setAttribute("stroke", has ? "var(--edge-strong)" : "var(--edge)"); c.setAttribute("stroke-dasharray", has ? "" : "3 2"); }
+  // 관심 작가는 진한 테로 구분한다
+  const star = FEATURED.has(n.id) && n.role !== "focus";
+  if (star) { c.setAttribute("stroke", "var(--ink)"); c.setAttribute("stroke-dasharray", ""); }
+  c.setAttribute("stroke-width", star ? 2.6 : 1.5);
   const show = n.role === "focus" || n.role === "fan" || (n.role === "path" && n.age <= 5) || (n.role === "child" && n.age === 0);
   t.textContent = show ? a.ko : "";
   const fs = n.role === "focus" ? 15 : n.role === "path" ? Math.max(10, 13 - n.age) : n.role === "fan" ? 11.5 : 12.5;
@@ -807,7 +994,8 @@ function renderLegend() {
   const el = document.getElementById("legend");
   el.innerHTML = Object.entries(KINDS).map(([k, v]) =>
     `<button type="button" class="kind-toggle" data-kind="${k}" aria-pressed="${!hiddenKinds.has(k)}" title="${v.label} 선 켜기/끄기">${lineSwatch(k)}${v.label}</button>`).join("") +
-    `<span class="note-dot"><i style="background:var(--ink-soft);border:1px solid var(--edge-strong)"></i>흐린 원: 이 작가를 좋아한 작가</span>`;
+    `<span class="note-dot"><i style="background:var(--ink-soft);border:1px solid var(--edge-strong)"></i>흐린 원: 이 작가를 좋아한 작가</span>` +
+    `<span class="note-dot"><i style="background:var(--bg);border:2.5px solid var(--ink)"></i>진한 테: 관심 작가</span>`;
   el.querySelectorAll("[data-kind]").forEach(b => b.onclick = () => {
     const k = b.dataset.kind;
     hiddenKinds.has(k) ? hiddenKinds.delete(k) : hiddenKinds.add(k);
@@ -875,12 +1063,13 @@ function renderPage() {
     <nav class="crumbs" aria-label="탐색 경로">${crumbs}</nav>
     ${routeHtml()}
     <div class="page-icon" aria-hidden="true">${esc(a.ko.replace(/^([A-Z]\.\s*)+/, "").slice(0, 1))}</div>
-    <h1>${esc(a.ko)}</h1>
+    <h1>${esc(a.ko)}${FEATURED.has(a.id) ? '<span class="badge">관심 작가</span>' : ""}${DEBUT[a.id] ? '<span class="badge debut">신춘문예</span>' : ""}</h1>
     ${a.en ? `<div class="en">${esc(a.en)}</div>` : ""}
     <dl class="props">
       <dt>국적</dt><dd>${esc(a.nation) || "—"}</dd>
       <dt>생몰</dt><dd>${esc(a.years) || "—"}</dd>
       <dt>탐색 깊이</dt><dd>${path.length}번째 작가</dd>
+      ${DEBUT[a.id] ? `<dt>등단</dt><dd>${esc(DEBUT[a.id])}</dd>` : ""}
       <dt>데이터</dt><dd>${esc(srcBits)}</dd>
     </dl>
     <hr class="div">
@@ -896,6 +1085,7 @@ function renderPage() {
     ${shown.length ? `<div class="table-wrap"><table>
       <thead><tr><th>작가</th><th>관계</th><th>출처</th><th>맥락</th></tr></thead>
       <tbody>${rows}</tbody></table></div>` : ""}
+    ${DEBUT[a.id] ? `<p class="tnote">※ ${esc(a.ko)} — ${esc(DEBUT[a.id])}</p>` : ""}
     ${hiddenN ? `<p class="note">관계 필터로 ${hiddenN}건을 숨겼습니다. 그래프 아래 범례를 눌러 다시 켤 수 있어요.</p>` : ""}
     <hr class="div">
     <h2>이 작가를 좋아한다고 밝힌 작가 <span class="count">${back.length}</span></h2>
@@ -903,6 +1093,9 @@ function renderPage() {
     <div class="backlinks">${back.length ? back.map(b => `<button class="chip" type="button" data-go="${esc(b.id)}">${lineSwatch(b.mentions.find(m => m.to === a.id).kind, 16)}${esc(b.ko)}</button>`).join("") : '<span class="note">아직 이 서가 안에는 없습니다.</span>'}</div>
     ${back.length > MAX_FANS ? `<p class="note">그래프에는 이 서가에서 자주 등장하는 ${MAX_FANS}명만 흐리게 띄웠습니다.</p>` : ""}
     ${meStore.length ? sendBoxHtml() : ""}
+    <hr class="div">
+    ${shelfToggle("관심 작가", [...FEATURED], "featured")}
+    ${shelfToggle("2020년 이후 신춘문예 당선자", Object.keys(DEBUT), "debut")}
     <p class="foot">'문헌' 항목은 프로토타입용으로 정리한 것이라 원문 대조가 필요하고, '확인 필요'는 출처를 아직 직접 대조하지 못한 항목입니다. Claude 추정 항목은 기억에 기댄 결과이므로 출처를 꼭 확인하세요. 원을 누르면 그 작가의 서가로 넘어가고, 지나온 작가는 왼쪽으로 물러나며 작아집니다.</p>`;
 
   page.querySelectorAll("[data-go]").forEach(b => b.onclick = () => go(b.dataset.go));
@@ -919,6 +1112,10 @@ function renderPage() {
     document.getElementById("r-to").value = "루소";
     document.getElementById("routeForm").requestSubmit();
   });
+  page.querySelectorAll("details.shelf").forEach(d => d.addEventListener("toggle", () => {
+    d.open ? openShelves.add(d.dataset.shelf) : openShelves.delete(d.dataset.shelf);
+    lsSet("authornet:shelves:v1", [...openShelves]);
+  }));
   page.querySelector("#resendBtn")?.addEventListener("click", resendAll);
   page.querySelector("a[href*='docs.google.com/forms']")?.addEventListener("click", () => {
     // 폼 탭을 열었으면 보낸 것으로 본다(제출 여부는 알 수 없음)
@@ -1008,6 +1205,14 @@ function sendBoxHtml() {
   return `<div class="callout"><span class="mark">✎</span><div><b>직접 추가 ${meStore.length}건</b> · ${unsent ? `작성자에게 아직 보내지 않은 항목이 ${unsent}건 있습니다.` : "모두 작성자에게 보냈습니다. 검토를 거쳐 서가에 반영됩니다."}
     ${unsent && !fallbackLink ? `<div class="db-tools" style="margin-top:8px"><button class="btn" type="button" id="resendBtn">보내지 않은 항목 보내기</button></div>` : ""}${link}
     <div class="db-tools" style="margin-top:8px"><button class="btn ghost" type="button" id="exportBtn">내가 추가한 항목 복사</button></div>${box}</div></div>`;
+}
+/* 노션식 토글: 관심 작가·신춘문예 당선자 목록 (펼침 상태는 브라우저에 기억) */
+let openShelves = new Set(lsGet("authornet:shelves:v1", ["featured"]));
+function shelfToggle(title, ids, key) {
+  const list = ids.filter(id => authors.has(id)).map(id => authors.get(id))
+    .sort((x, y) => x.ko.localeCompare(y.ko, "ko"));
+  const chips = list.map(b => `<button class="chip${b.id === focusId() ? " on" : ""}" type="button" data-go="${esc(b.id)}">${esc(b.ko)}${b.mentions.length ? `<span class="n">${b.mentions.length}</span>` : ""}</button>`).join("");
+  return `<details class="shelf" data-shelf="${key}"${openShelves.has(key) ? " open" : ""}><summary>${esc(title)} <span class="count">${list.length}</span></summary><div class="backlinks">${chips}</div></details>`;
 }
 function addForm(a) {
   return `<form class="add">
