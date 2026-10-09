@@ -307,6 +307,16 @@ const SEED_AUTHORS = [
   ["woolf","버지니아 울프","Virginia Woolf","영국","1882–1941",["울프"]],
   ["vargasllosa","마리오 바르가스 요사","Mario Vargas Llosa","페루","1936–2025",["바르가스 요사","Vargas Llosa"]],
   ["rushdie","살만 루슈디","Salman Rushdie","영국(인도 출생)","1947–",["루슈디"]],
+  ["choiyun", "최윤", "Choi Yun", "한국", "1953–", []],
+  ["kimbyungik", "김병익", "Kim Byong-ik", "한국 (평론가)", "1938–", []],
+  ["kimjuyeon", "김주연", "Kim Ju-yeon", "한국 (평론가)", "1941–", []],
+  ["leeinseong", "이인성", "Yi In-seong", "한국", "1953–", []],
+  ["onyebuchi", "토치 오녜부치", "Tochi Onyebuchi", "미국", "1987–", []],
+  ["tieryas", "피터 티에리아스", "Peter Tieryas", "미국", "", []],
+  ["pinsker", "세라 핀스커", "Sarah Pinsker", "미국", "", []],
+  ["slhuang", "S. L. 황", "S. L. Huang", "미국", "", []],
+  ["elmohtar", "아말 엘모흐타르", "Amal El-Mohtar", "캐나다", "1984–", []],
+  ["gladstone", "맥스 글래드스턴", "Max Gladstone", "미국", "1984–", []],
   ["akutagawa", "아쿠타가와 류노스케", "Ryūnosuke Akutagawa", "일본", "1892–1927", ["류노스케", "아쿠타가와"]],
   ["eco", "움베르토 에코", "Umberto Eco", "이탈리아", "1932–2016", ["에코"]],
   ["endo", "엔도 슈사쿠", "Shūsaku Endō", "일본", "1923–1996", ["엔도"]],
@@ -722,7 +732,7 @@ const SEED_MENTIONS = [
   ["latour", "stengers", "동료", "공저", "여러 공동 작업", "—", "함께 쓴 글은 많지 않지만 30년 넘게 지적 동반자로 지냈다."],
   ["maupassant", "turgenev", "애독", "헌사", "소설집 『텔리에 집』 헌사", "1881", "첫 소설집을 투르게네프에게 바쳤고, 「무무」의 영향으로 「개 이야기」를 썼다. 1877년 플로베르의 소개로 만났다."],
   ["poe", "dickens", "애독", "서평", "디킨스 『바너비 러지』 서평 (Graham's Magazine)", "1841–1842", "연재 중인 소설의 결말을 맞혔고, 말하는 까마귀 그립에 주목했다. 1842년 디킨스를 직접 만났다."],
-  ["leeseungu", "leecheongjun", "애독", "회고", "여러 인터뷰", "—", "습작기에 고향 선배 이청준의 소설을 읽고 처음 소설가를 꿈꿨다고 밝혔다.", 1],
+  ["leeseungu", "leecheongjun", "스승", "인터뷰·추모", "뉴스앤조이 인터뷰 / 한국일보 추모글", "2008", "고등학생 때 이청준의 소설에 매료되어 소설가를 꿈꿨다. 추모글에서 \"선생님은 소설을 어떻게 써야 하는지 한마디도 하지 않았지만, 저는 수많은 가르침을 받았습니다\"라고 썼다."],
   ["leeseungu", "borges", "애독", "산문", "『소설가의 귓속말』 (은행나무) — 「푸네스처럼 새롭게」, 「보르헤스와 류노스케를 읽으며」", "2020", "보르헤스의 「기억의 천재 푸네스」를 실마리로 글을 쓰고, 보르헤스를 아쿠타가와와 나란히 읽는다."],
   ["leeseungu", "akutagawa", "애독", "산문", "『소설가의 귓속말』 — 「보르헤스와 류노스케를 읽으며」", "2020", "아쿠타가와 류노스케를 보르헤스와 함께 읽는 장을 따로 두었다."],
   ["leeseungu", "eco", "애독", "산문", "『소설가의 귓속말』", "2020", "'영감은 어디서 오는가'라는 물음에 영감이라는 말 자체를 경계한 움베르토 에코의 말로 답한다."],
@@ -730,11 +740,25 @@ const SEED_MENTIONS = [
   ["jangkangmyoung", "hazlitt", "애독", "추천사", "해즐릿 『혐오의 즐거움에 관하여』 추천사 (아티초크)", "—", "'치켜세우는 추천사는 쓰지 않는다'는 원칙을 지키며 해즐릿의 에세이를 안내하는 추천사를 썼다."],
   ["kimhwayoung", "leemankyo", "애독", "심사평", "제24회 오늘의 작가상 심사 (『결혼은, 미친 짓이다』)", "2000", "\"단연 젊다\", \"리모컨을 장착한 새로운 작가의 출현\"이라 평하며 아우라가 사라진 시대의 소설다운 작품이라고 했다."],
   ["kimhwayoung", "camus", "번역", "번역", "『알베르 카뮈 전집』 번역 (책세상)", "1987–", "카뮈의 작품 대부분을 한국어로 옮겼다."],
+  ["leecheongjun", "mann", "스승", "회고", "서울대 독문과 강두식 교수의 토마스 만 강독", "1964–", "복학 뒤 토마스 만 강독을 들으며 소설이 '치열한 인간의식의 구조물'임을 깨달았고, 액자 구조와 이원적 세계관에 그 영향이 남았다.", 1],
+  ["leecheongjun", "leeseungu", "스승", "심사", "한국문학 신인상 심사", "1981", "심사위원으로 이승우의 등단작을 뽑았다."],
+  ["kimseungok", "leecheongjun", "동료", "회고", "서울대 60학번 동기", "1960년대", "등단 무렵 같은 처지였던 이청준을 꼬드겨 함께 신춘문예에 투고했다.", 1],
+  ["kimbyungik", "leecheongjun", "동료", "추도", "이청준 문인장 장례위원장 추도", "2008", "오랜 문우로서 \"독보적이고도 품이 넓은 작품 세계로 한국문학과 후진들에게 큰 영향을 끼친 작가\"라 했다."],
+  ["choiyun", "leecheongjun", "동료", "회고", "이청준 타계 당시 회고 (한국일보)", "2008", "\"선생님과 몇 번 함께 여행할 일이 있었는데 세상과 세밀하게 접촉하는 모습에서 여성적 품성을 느끼곤 했다.\""],
+  ["leeinseong", "leecheongjun", "애독", "회고", "이청준 타계 당시 회고 (한국일보)", "2008", "\"굴곡 많은 삶을 살고도 늘 단출하고 정돈된 모습으로 살아오셨던 분.\""],
+  ["kimjuyeon", "leecheongjun", "애독", "평론", "『이청준론』 (삼인행)", "1991", "이청준 문학을 한 권의 평론서로 묶었다."],
+  ["kimhyun", "leecheongjun", "경쟁", "평론", "『당신들의 천국』 평론", "1970년대", "『당신들의 천국』을 날카롭게 읽어 내며 이청준과 문학적 대결을 벌였다.", 1],
+  ["kenliu", "onyebuchi", "애독", "추천", "Five Books 「최고의 사변소설」", "2020", "추천 다섯 권에 『라이엇 베이비』를 넣었다."],
+  ["kenliu", "tieryas", "애독", "추천", "Five Books 「최고의 사변소설」", "2020", "추천 다섯 권에 『미합중국 일본』을 넣었다."],
+  ["kenliu", "pinsker", "애독", "추천", "Five Books 「최고의 사변소설」", "2020", "추천 다섯 권에 『새로운 날을 위한 노래』를 넣었다."],
+  ["kenliu", "slhuang", "애독", "추천", "Five Books 「최고의 사변소설」", "2020", "추천 다섯 권에 『제로섬 게임』을 넣었다."],
+  ["kenliu", "elmohtar", "애독", "추천", "Five Books 「최고의 사변소설」", "2020", "추천 다섯 권에 엘모흐타르·글래드스턴의 『시간 전쟁에서 지는 방법』을 넣었다."],
+  ["kenliu", "gladstone", "애독", "추천", "Five Books 「최고의 사변소설」", "2020", "같은 책의 공저자."],
   ["limsola","kimkitae","애독","추천사","『두 사람의 인터내셔널』 추천사","2024","\"김기태의 소설은 내게 완전한 기쁨을 주었다.\""],
 ];
 
 /* 관심 작가 — 서가 주인이 가장 아끼는 작가들. 그래프에서 테가 진하고, 흐린 원 후보에서 앞선다 */
-const FEATURED = new Set(["kimaeran", "parkmingyu", "borges", "marquez", "lessing", "kenliu", "leguin", "butler", "pkdick", "faulkner", "mcewan", "ishiguro", "barad", "latour", "poe", "seomiae", "tedchiang", "joehill", "djuna", "hwangjeongeun", "kafka", "jowalton", "canetti", "jamison", "kuhyoseo", "choiinhun", "parktaewon", "munro", "adichie", "oates", "leegiho", "jangkangmyoung", "kwonyeoseon", "leeseungu", "maupassant", "oe", "jelinek", "kimyeonsu", "kimkitae", "lahiri", "tanizaki", "daudet"]);
+const FEATURED = new Set(["kimaeran", "parkmingyu", "borges", "marquez", "lessing", "kenliu", "leguin", "butler", "pkdick", "faulkner", "mcewan", "ishiguro", "barad", "latour", "poe", "seomiae", "tedchiang", "joehill", "djuna", "hwangjeongeun", "kafka", "jowalton", "canetti", "jamison", "kuhyoseo", "choiinhun", "parktaewon", "munro", "adichie", "oates", "leegiho", "jangkangmyoung", "kwonyeoseon", "leeseungu", "maupassant", "oe", "jelinek", "kimyeonsu", "kimkitae", "lahiri", "tanizaki", "daudet", "leecheongjun", "choiyun"]);
 /* 2020년 이후 신춘문예 당선자 — 작가 페이지 표 아래에 주석으로 표시 */
 const DEBUT = {};
 
