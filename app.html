@@ -307,6 +307,15 @@ const SEED_AUTHORS = [
   ["woolf","버지니아 울프","Virginia Woolf","영국","1882–1941",["울프"]],
   ["vargasllosa","마리오 바르가스 요사","Mario Vargas Llosa","페루","1936–2025",["바르가스 요사","Vargas Llosa"]],
   ["rushdie","살만 루슈디","Salman Rushdie","영국(인도 출생)","1947–",["루슈디"]],
+  ["carson", "앤 카슨", "Anne Carson", "캐나다", "1950–", ["카슨"]],
+  ["krasznahorkai", "크러스너호르커이 라슬로", "László Krasznahorkai", "헝가리", "1954–", ["라슬로", "크러스너호르커이", "크라스나호르카이"]],
+  ["sappho", "사포", "Sappho", "고대 그리스", "BC 630?–570?", []],
+  ["stesichorus", "스테시코로스", "Stesichorus", "고대 그리스", "BC 630?–555?", []],
+  ["weil", "시몬 베유", "Simone Weil", "프랑스 (철학자)", "1909–1943", ["베유"]],
+  ["beckett", "사뮈엘 베케트", "Samuel Beckett", "아일랜드", "1906–1989", ["베케트"]],
+  ["lowry", "맬컴 라우리", "Malcolm Lowry", "영국", "1909–1957", ["라우리"]],
+  ["sontag", "수전 손택", "Susan Sontag", "미국", "1933–2004", ["손택"]],
+  ["belatarr", "벨라 타르", "Béla Tarr", "헝가리 (영화감독)", "1955–", ["타르 벨라"]],
   ["moyan", "모옌", "Mo Yan", "중국", "1955–", ["莫言", "모얀"]],
   ["yuhua", "위화", "Yu Hua", "중국", "1960–", ["余华", "余華"]],
   ["kawabata", "가와바타 야스나리", "Yasunari Kawabata", "일본", "1899–1972", ["가와바타"]],
@@ -787,11 +796,24 @@ const SEED_MENTIONS = [
   ["eunheekyung", "leehyekyung", "동료", "인터뷰", "에스콰이어 코리아 인터뷰", "—", "같은 맥락에서 이혜경을 들었다."],
   ["eunheekyung", "kiminsook", "동료", "인터뷰", "에스콰이어 코리아 인터뷰", "—", "같은 맥락에서 김인숙을 들었다."],
   ["eunheekyung", "baesuah", "동료", "인터뷰", "에스콰이어 코리아 인터뷰", "—", "같은 맥락에서 배수아를 들었다."],
+  ["carson", "sappho", "번역", "번역·연구", "『만약 겨울이 아니라면』 (If Not, Winter) / 박사 논문 → 『에로스, 달콤씁쓸한』", "1986 / 2002", "사포 연구로 박사 논문을 써 첫 책 『에로스, 달콤씁쓸한』을 냈고, 사포 단편 전체를 영어로 옮겼다."],
+  ["carson", "stesichorus", "오마주", "작품", "『빨강의 자서전』 (Autobiography of Red)", "1998", "스테시코로스의 『게리오네이스』 단편을 바탕으로 붉은 괴물 게리온의 이야기를 현대의 운문 소설로 다시 썼다."],
+  ["carson", "ebronte", "오마주", "작품", "「유리 에세이」 (『유리, 아이러니 그리고 신』)", "1995", "실연 뒤 어머니 집에서 에밀리 브론테를 읽으며 사랑과 고독을 사유하는 장시."],
+  ["carson", "weil", "애독", "작품", "『탈창조』 (Decreation)", "2005", "사포, 마르그리트 포레트와 함께 시몬 베유를 다루며 '자아를 지우는' 글쓰기를 탐구했다."],
+  ["carson", "stein", "애독", "연구", "여러 작품·인터뷰", "—", "거트루드 스타인을 현대의 참조점으로 자주 불러낸다.", 1],
+  ["carson", "woolf", "애독", "연구", "여러 작품·인터뷰", "—", "버지니아 울프를 거듭 참조한다.", 1],
+  ["carson", "beckett", "애독", "연구", "여러 작품·인터뷰", "—", "베케트를 거듭 참조한다.", 1],
+  ["krasznahorkai", "kafka", "스승", "인터뷰", "PEN 월드 보이시스 마스터 클래스 / The Paris Review, The Art of Fiction No. 240", "2014 / 2018", "\"카프카가 없었다면 나는 존재하지 않았을 것이다.\" 한동안 『성』을 성경처럼 끼고 살았고, 카프카를 따라 법학을 공부하려 했다."],
+  ["krasznahorkai", "lowry", "애독", "인터뷰", "The Paris Review, The Art of Fiction No. 240", "2018", "카프카의 『성』과 함께 라우리의 『화산 아래서』를 '성경'으로 삼았던 시절을 회고했다."],
+  ["krasznahorkai", "dostoevsky", "애독", "회고", "여러 인터뷰", "—", "외딴 마을에서 야간 경비원으로 일하며 도스토옙스키를 읽었다.", 1],
+  ["krasznahorkai", "belatarr", "동료", "공동 작업", "「사탄탱고」, 「베르크마이스터 하모니즈」, 「토리노의 말」 등", "1994–2011", "동갑내기 영화감독 벨라 타르와 일곱 편의 영화를 함께 만들었다."],
+  ["sebald", "krasznahorkai", "애독", "추천사", "『저항의 멜랑콜리』 영역판 추천사", "1998", "\"크러스너호르커이 비전의 보편성은 고골의 『죽은 혼』에 견줄 만하고, 동시대 글쓰기의 사소한 관심사들을 훨씬 넘어선다.\""],
+  ["sontag", "krasznahorkai", "애독", "평", "『저항의 멜랑콜리』를 읽은 뒤", "1998", "그를 '묵시록의 거장'이라 부르며 고골과 멜빌을 떠올리게 한다고 했다."],
   ["limsola","kimkitae","애독","추천사","『두 사람의 인터내셔널』 추천사","2024","\"김기태의 소설은 내게 완전한 기쁨을 주었다.\""],
 ];
 
 /* 관심 작가 — 서가 주인이 가장 아끼는 작가들. 그래프에서 테가 진하고, 흐린 원 후보에서 앞선다 */
-const FEATURED = new Set(["kimaeran", "parkmingyu", "borges", "marquez", "lessing", "kenliu", "leguin", "butler", "pkdick", "faulkner", "mcewan", "ishiguro", "barad", "latour", "poe", "seomiae", "tedchiang", "joehill", "djuna", "hwangjeongeun", "kafka", "jowalton", "canetti", "jamison", "kuhyoseo", "choiinhun", "parktaewon", "munro", "adichie", "oates", "leegiho", "jangkangmyoung", "kwonyeoseon", "leeseungu", "maupassant", "oe", "jelinek", "kimyeonsu", "kimkitae", "lahiri", "tanizaki", "daudet", "leecheongjun", "choiyun", "moyan", "yuhua", "shinkyungsook", "eunheekyung", "jeonkyunglin", "leehyekyung"]);
+const FEATURED = new Set(["kimaeran", "parkmingyu", "borges", "marquez", "lessing", "kenliu", "leguin", "butler", "pkdick", "faulkner", "mcewan", "ishiguro", "barad", "latour", "poe", "seomiae", "tedchiang", "joehill", "djuna", "hwangjeongeun", "kafka", "jowalton", "canetti", "jamison", "kuhyoseo", "choiinhun", "parktaewon", "munro", "adichie", "oates", "leegiho", "jangkangmyoung", "kwonyeoseon", "leeseungu", "maupassant", "oe", "jelinek", "kimyeonsu", "kimkitae", "lahiri", "tanizaki", "daudet", "leecheongjun", "choiyun", "moyan", "yuhua", "shinkyungsook", "eunheekyung", "jeonkyunglin", "leehyekyung", "carson", "krasznahorkai"]);
 /* 2020년 이후 신춘문예 당선자 — 작가 페이지 표 아래에 주석으로 표시 */
 const DEBUT = {};
 
